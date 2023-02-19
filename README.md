@@ -2,22 +2,22 @@
 
 ## Topics
 ### Statistics
-0. Histogram
-1. Skew
-2. Variance
-3. Standard Deviation and Variance coefficient
-4. Covariance
-5. Correlation coefficient
-6. Normal Standard Distribution
-7. Confidence Interval Z
-8. Confidence Interval T
-9. Confidence Interval. Independent Samples
-10. Confidence Interval. Dependent Samples
-11. Test for the mean. Population Variance known
-12. Test for the mean. Population Variance unknown
-13. Test for the mean. Dependent Samples
-14. Test for the mean. Independent Samples
-15. Hypothesis test
+1. Pareto's Chart
+2. Histogram
+3. Skew
+4. Variance, Standard Deviation and Variance coefficient
+5. Covariance
+6. Correlation coefficient
+7. Normal Standard Distribution
+8. Confidence Interval Z
+9. Confidence Interval T
+10. Confidence Interval. Independent Samples
+11. Confidence Interval. Dependent Samples
+12. Test for the mean. Population Variance known
+13. Test for the mean. Population Variance unknown
+14. Test for the mean. Dependent Samples
+15. Test for the mean. Independent Samples
+16. Hypothesis test
 
 ### Stadistics methods with Python
 1. Simple linear Regression (StatsModels)

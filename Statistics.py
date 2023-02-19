@@ -15,8 +15,8 @@ sales_grouped = sales[['ProductID', 'OrderQty', 'LineTotal']].groupby(['ProductI
 
 # How to create Pareto's Chart
     # Get Frequency of data and Sort
-sales_frequency = sales[['ProductID', 'OrderQty']].rename(columns={'OrderQty': 'freq'}).groupby(['ProductID']).count().iloc[:10]
-sales_frequency = sales_frequency.sort_values('freq', ascending=False)
+sales_frequency = sales[['ProductID', 'OrderQty']].rename(columns={'OrderQty': 'freq'}).groupby(['ProductID']).count()
+sales_frequency = sales_frequency.sort_values('freq', ascending=False).iloc[:10]
 
     # Adj Index
 ProductID = list(sales_frequency.index)
