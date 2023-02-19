@@ -22,7 +22,7 @@ plt.show()
 
 x = sm.add_constant(x1)
 results = sm.OLS(y,x).fit()
-results.summary()
+print(results.summary())
 
 plt.scatter(x1,y)
 yhat = x1*223.1787+101900
