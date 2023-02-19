@@ -2,6 +2,7 @@
 
 ## Topics
 ### Statistics
+0. Histogram
 1. Skew
 2. Variance
 3. Standard Deviation and Variance coefficient
