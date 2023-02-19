@@ -1,15 +1,19 @@
-import requests
+import pandas as pd
 import pyodbc
+import warnings
 
-cnxn_str = ("Driver={SQL Server Native Client 11.0};"
-            "Server=localhost"
-            "Database=AdventureWorks2019;"
-            "Trusted_Connection=yes;")
 
-cnxn = pyodbc.connect(cnxn_str)
+warnings.filterwarnings('ignore')
 
-query = 'Select * from Select * from Sales.SalesOrderDetail'
 
-response = requests.get(query, cnxn)
+class SQLServer:
+    def __init__(self, database):
+        self.Driver = 'ODBC Driver 17 for SQL Server'
+        self.Server = 'localhost'
+        self.Database = database
+        self.conn = pyodbc.connect(f'DRIVER={self.Driver};SERVER={self.Server};DATABASE={self.Database};Trusted_Connection=yes;')
 
-print(response)
+
+    def select(self, query):
+        return pd.read_sql(query, self.conn)
+    

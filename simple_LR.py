@@ -6,7 +6,7 @@ import seaborn as sns
 import requests
 sns.set()
 
-data = pd.read_csv('1_real_estate_price_size.csv')
+data = pd.read_csv('real_estate_price_size.csv')
 
 print(data.head())
 
