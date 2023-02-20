@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 from matplotlib import style
+import seaborn as sns
 
 
 # Init SQLServer connection and get data
@@ -15,10 +16,17 @@ sales = AdvWorks.select(query)
 style.use('ggplot')
 
 
-# Plot Histogram
-plt.figure(figsize=(10, 5))
-plt.hist(sales['ProductID'], bins = 5, color = "blue", rwidth=0.9)
-plt.title("Product Hist")
+# Plot Histogram 1
+bins = 7
+plt.hist(sales['ProductID'], bins = bins, color = "blue", rwidth=0.9, alpha=0.5)
+# sales['ProductID'].plot.hist(alpha=0.5, bins=bins, grid=True, legend=None)
+plt.title("Product Histogram")
 plt.xlabel("Product")
 plt.ylabel("Frequency")
+
+
+# Plot Histogram 2
+fig, ax = plt.subplots()
+sns.histplot(data=sales['ProductID'], x=sales['ProductID'], kde=True, bins=bins)
+ax.set_title('Histogram and KDE of sepal length')
 plt.show()
