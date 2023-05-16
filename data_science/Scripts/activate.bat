@@ -8,7 +8,7 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
-set VIRTUAL_ENV=C:\Users\Ricardo Jaramillo\Documents\2_GitHub\Python-DataScience\data_science
+set VIRTUAL_ENV=E:\GGA Solutions\1_RicardoJH\1_Develoment\5_Python\Python-DataScience\data_science
 
 if not defined PROMPT set PROMPT=$P$G
 
