@@ -38,7 +38,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="C:\Users\Ricardo Jaramillo\Documents\2_GitHub\Python-DataScience\data_science"
+VIRTUAL_ENV="E:\GGA Solutions\1_RicardoJH\1_Develoment\5_Python\Python-DataScience\data_science"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
