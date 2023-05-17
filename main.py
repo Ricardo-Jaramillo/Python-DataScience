@@ -1,10 +1,9 @@
+from data_science import Stats
 from SQLServer import SQLServer
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 from matplotlib import style
-import seaborn as sns
-
 
 # Init SQLServer connection and get data
 Therabody = SQLServer('DbTherabody')
@@ -40,21 +39,14 @@ query = '''
 
 # Set DataFrames
 case = Therabody.select(query)
-data_histogram = pd.to_numeric(case['Case_HandleTimeHours'], errors='coerce').fillna(0).astype(float)
+case_DispositionReason = case[['Case_DispositionReason', 'freq']] # .query('Case_DispositionReason != ""')
+case_HandleTimeHours = pd.to_numeric(case['Case_HandleTimeHours'], errors='coerce').fillna(0).astype(float)
 
-# Init matplotlib style
-style.use('ggplot')
+# Init Stats class
+thera = Stats()
 
-# Plot Histogram 1
-bins = 7
-plt.hist(data_histogram, bins=bins, color = "blue", rwidth=0.9, alpha=0.5)
-# sales['ProductID'].plot.hist(alpha=0.5, bins=bins, grid=True, legend=None)
-plt.title("Histogram")
-plt.xlabel("Value")
-plt.ylabel("Frequency")
+# Plot Paretos chart
+thera.pareto(case_DispositionReason, plot=True)
 
-# Plot Histogram 2
-fig, ax = plt.subplots()
-sns.histplot(data=data_histogram, x=data_histogram, kde=True, bins=bins)
-ax.set_title('Histogram and KDE of sepal length')
-plt.show()
+# Plot Histogram
+thera.histogram(case_HandleTimeHours, bins=10)
