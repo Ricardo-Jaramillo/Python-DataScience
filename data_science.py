@@ -16,15 +16,10 @@ class Stats():
         pass
 
     
-    # n x 2 Table with variable and 'freq' (freq must be in last position)
+    # n x 2 Table with variable name and 'freq' grouped by variable name (freq must be in last position)
     def pareto(self, data, plot=False, xlim=False):
-        field = data.columns.to_list()[0]
-
-        # Group data by Frequency
-        count = data.groupby([field]).count()
-
         # Order data
-        data_frequency = count.sort_values('freq', ascending=False)#.iloc[5:15]
+        data_frequency = data.sort_values('freq', ascending=False)#.iloc[5:15]
 
         # Get relative_frequency and totals
         origin_relative_frequency = data_frequency['freq'].cumsum()
@@ -48,8 +43,9 @@ class Stats():
             
             # Rotate xticks
             # plt.xticks(xdata,catnames,rotation=90)
-            plt.setp(ax.get_xticklabels(), rotation=45, ha='right') # plt.xticks()[1] -> another way to get the ticks
-            plt.tight_layout()
+            plt.setp(ax.get_xticklabels(), rotation=45, ha='right', fontsize=8) # plt.xticks()[1] -> another way to get the ticks
+            # plt.tight_layout()
+            plt.subplots_adjust(left=0.2, bottom=0.4)
 
             # Show values on the graph
             for i, v in enumerate(data_frequency['cum_freq']):
@@ -63,7 +59,8 @@ class Stats():
         
         return data_frequency
     
-
+    
+    # list with values to plot
     def histogram(self, data_histogram, bins):
         # Plot Histogram 1
         bins = 7
@@ -78,3 +75,60 @@ class Stats():
         ax.set_title('Histogram and KDE of sepal length')
         plt.show()
 
+
+    # dataframe with index and columns of data (max 7 columns)
+    def bars(self, data_bars, type='simple', stacked=False, rotation=0, table=False):
+        # Plot bars chart
+        
+        array_xticks = np.arange(len(data_bars.index))
+        prev_data_bars = np.zeros(len(data_bars.index))
+        y_offset = prev_data_bars
+        width = 0.1
+        cell_text = []
+
+        if stacked:
+            aux = 0
+        else:
+            aux = width
+        
+        offset = np.array([0, 1, -1, 2, -2, 3, -3]) * aux
+        # color = ['blue', 'purple', 'red', 'green', 'yellow', 'cian', 'orange']
+        
+        # plt.figure(figsize=(10, 5))
+        for i in range(len(data_bars.columns)):
+            column = data_bars.columns[i]
+
+            if type == 'simple':
+                plt.bar(array_xticks + offset[i], data_bars[column], width=width, label=column, bottom=prev_data_bars)
+                plt.setp([plt.xticks()[1]], rotation=rotation, ha='right') # , fontsize=8)
+                plt.ylabel("Value")
+
+                if not table:
+                    plt.xlabel(f"{data_bars.index.name}")
+            
+            elif type == 'horizontal':
+                plt.barh(array_xticks + offset[i], data_bars[column], height=width, label=column, left=prev_data_bars)
+                plt.xlabel("Value")
+                plt.ylabel(f"{data_bars.index.name}")
+                plt.yticks(array_xticks, data_bars.index)
+            
+            if stacked:
+                prev_data_bars += np.array(data_bars[column])
+
+            if table and type != 'horizontal':
+                if stacked:
+                    y_offset = prev_data_bars
+                else:
+                    y_offset = data_bars[column]
+                cell_text.append(['%1.1f' % x for x in y_offset])
+                plt.xticks([])
+
+        if table and type != 'horizontal':
+            # cell_text.reverse()
+            plt.table(cellText=cell_text, rowLabels=data_bars.columns.to_list(), colLabels=array_xticks.tolist(), loc='bottom') # rowColours=colors, 
+            plt.subplots_adjust(left=0.2, bottom=0.2)
+        
+        plt.title(f"{data_bars.index.name} {type} bars")
+        plt.tight_layout() # plt.subplots_adjust(bottom=0.2)
+        plt.legend()
+        plt.show()

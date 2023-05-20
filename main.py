@@ -28,7 +28,7 @@ query = '''
         Case_Disposition_Detailed,
         Case_Product,
         
-        Case_FirstResponseToCustomerSeconds,
+        Case_FirstResponseToCustomerSeconds / 3600 Case_FRHours,
         Case_HandleTimeHours,
         Case_FRBusinessHours,
         1 as freq
@@ -37,16 +37,38 @@ query = '''
     where Date_Created >= '2023-01-01'
 '''
 
+# Reach data
+# case = Therabody.select(query)
+# case.to_csv('case.csv')
+case = pd.read_csv('case.csv')
+
 # Set DataFrames
-case = Therabody.select(query)
-case_DispositionReason = case[['Case_DispositionReason', 'freq']] # .query('Case_DispositionReason != ""')
+case_DispositionReason = case[['Case_DispositionReason', 'freq']].groupby(['Case_DispositionReason']).count() # .query('Case_DispositionReason != ""')
+
 case_HandleTimeHours = pd.to_numeric(case['Case_HandleTimeHours'], errors='coerce').fillna(0).astype(float)
+
+case_metrics = case[[
+                    'Case_CSAT',
+                    'Case_HandleTimeHours',
+                    'Case_FRBusinessHours',
+                    'Case_FRHours'
+                ]].query('Case_CSAT != ""').replace('', np.nan).groupby(['Case_CSAT']).mean()
 
 # Init Stats class
 thera = Stats()
 
 # Plot Paretos chart
-thera.pareto(case_DispositionReason, plot=True)
+thera.pareto(case_DispositionReason, plot=True, xlim=False)
 
 # Plot Histogram
 thera.histogram(case_HandleTimeHours, bins=10)
+
+# Plot Bars charts
+thera.bars(case_metrics, type='simple', stacked=False, rotation=0, table=False)
+thera.bars(case_metrics, type='simple', stacked=False, rotation=0, table=True)
+thera.bars(case_metrics, type='simple', stacked=True, rotation=0, table=False)
+thera.bars(case_metrics, type='simple', stacked=True, rotation=0, table=True)
+thera.bars(case_metrics, type='horizontal', stacked=False, rotation=0, table=False)
+thera.bars(case_metrics, type='horizontal', stacked=False, rotation=0, table=True)
+thera.bars(case_metrics, type='horizontal', stacked=True, rotation=0, table=False)
+thera.bars(case_metrics, type='horizontal', stacked=True, rotation=0, table=True)
