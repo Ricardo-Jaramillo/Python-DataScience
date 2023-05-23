@@ -1,6 +1,8 @@
 import pandas as pd
-import pyodbc
+import numpy as np
 import warnings
+import pyodbc
+
 
 
 warnings.filterwarnings('ignore')
@@ -15,5 +17,5 @@ class SQLServer:
 
 
     def select(self, query):
-        return pd.read_sql(query, self.conn).fillna('')
+        return pd.read_sql(query, self.conn) # .fillna(np.NaN)
     

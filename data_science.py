@@ -1,9 +1,10 @@
-from SQLServer import SQLServer
 import matplotlib.pyplot as plt
+from SQLServer import SQLServer
+from matplotlib import style
+from scipy import stats
+import seaborn as sns
 import pandas as pd
 import numpy as np
-from matplotlib import style
-import seaborn as sns
 
 
 # Init matplotlib style
@@ -25,7 +26,7 @@ class Stats():
         origin_relative_frequency = data_frequency['freq'].cumsum()
         total_count = data_frequency['freq'].sum()
         data_frequency['cum_freq'] = origin_relative_frequency / total_count * 100
-        # print(data_frequency)
+        print(data_frequency)
 
         if plot:
             # Set fig and ax
@@ -61,25 +62,23 @@ class Stats():
     
     
     # list with values to plot
-    def histogram(self, data_histogram, bins):
-        # Plot Histogram 1
-        bins = 7
-        plt.hist(data_histogram, bins=bins, color = "blue", rwidth=0.9, alpha=0.5)
-        plt.title("Histogram")
-        plt.xlabel("Value")
-        plt.ylabel("Frequency")
+    def histogram(self, data_histogram, bins, kde=False):
+        # Histogram type 1
+        # plt.hist(data_histogram, bins=bins, color = "blue", rwidth=0.9, alpha=0.5)
+        # plt.title("Histogram")
+        # plt.xlabel("Value")
+        # plt.ylabel("Frequency")
 
-        # Plot Histogram 2
+        # Histogram type 2
         fig, ax = plt.subplots()
-        sns.histplot(data=data_histogram, x=data_histogram, kde=True, bins=bins)
-        ax.set_title('Histogram and KDE of sepal length')
+        sns.histplot(data=data_histogram, x=data_histogram, kde=kde, bins=bins, alpha=0.5)
+        ax.set_title('Histogram')
         plt.show()
 
 
-    # dataframe with index and columns of data (max 7 columns)
+    # dataframe (max 7 columns)
     def bars(self, data_bars, type='simple', stacked=False, rotation=0, table=False):
-        # Plot bars chart
-        
+        # init variables
         array_xticks = np.arange(len(data_bars.index))
         prev_data_bars = np.zeros(len(data_bars.index))
         y_offset = prev_data_bars
@@ -94,7 +93,7 @@ class Stats():
         offset = np.array([0, 1, -1, 2, -2, 3, -3]) * aux
         # color = ['blue', 'purple', 'red', 'green', 'yellow', 'cian', 'orange']
         
-        # plt.figure(figsize=(10, 5))
+        # plot according scpecs
         for i in range(len(data_bars.columns)):
             column = data_bars.columns[i]
 
@@ -131,4 +130,20 @@ class Stats():
         plt.title(f"{data_bars.index.name} {type} bars")
         plt.tight_layout() # plt.subplots_adjust(bottom=0.2)
         plt.legend()
+        plt.show()
+
+    
+    # n x 1 dataset
+    def skew(self, data):
+        # Print Mean and Std. Deviation. Describe Data
+        print("Mean: %0.3f +/-std %0.3f" % (np.mean(data), np.std(data)))
+        print('Median: %0.3f' % np.median(data))
+
+        # Skew
+        print('\nSkewness for data : ', stats.skew(data))
+    
+
+    def probplot(self, data):
+        fig, (ax) = plt.subplots(figsize = (4,4))
+        stats.probplot(data, dist='norm', plot=ax)
         plt.show()

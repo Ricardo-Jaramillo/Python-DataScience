@@ -45,7 +45,7 @@ case = pd.read_csv('case.csv')
 # Set DataFrames
 case_DispositionReason = case[['Case_DispositionReason', 'freq']].groupby(['Case_DispositionReason']).count() # .query('Case_DispositionReason != ""')
 
-case_HandleTimeHours = pd.to_numeric(case['Case_HandleTimeHours'], errors='coerce').fillna(0).astype(float)
+case_HandleTimeHours = case['Case_HandleTimeHours'][case['Case_HandleTimeHours'] <= 20]
 
 case_metrics = case[[
                     'Case_CSAT',
@@ -61,7 +61,7 @@ thera = Stats()
 thera.pareto(case_DispositionReason, plot=True, xlim=False)
 
 # Plot Histogram
-thera.histogram(case_HandleTimeHours, bins=10)
+thera.histogram(case_HandleTimeHours, bins=10, kde=True)
 
 # Plot Bars charts
 thera.bars(case_metrics, type='simple', stacked=False, rotation=0, table=False)
@@ -72,3 +72,9 @@ thera.bars(case_metrics, type='horizontal', stacked=False, rotation=0, table=Fal
 thera.bars(case_metrics, type='horizontal', stacked=False, rotation=0, table=True)
 thera.bars(case_metrics, type='horizontal', stacked=True, rotation=0, table=False)
 thera.bars(case_metrics, type='horizontal', stacked=True, rotation=0, table=True)
+
+# Describe mean, std, median and skew
+thera.skew(case_HandleTimeHours)
+
+# Plot probplot
+thera.probplot(case_HandleTimeHours)
