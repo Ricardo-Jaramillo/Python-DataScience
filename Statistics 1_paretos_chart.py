@@ -6,39 +6,66 @@ from matplotlib import style
 
 
 # Init SQLServer connection and get data
-AdvWorks = SQLServer('AdventureWorks2019')
-query = 'Select * from V_sales_detailed'
-sales = AdvWorks.select(query)
+Therabody = SQLServer('DbTherabody')
+query = '''
+    select
+        Emp,
+        agent_name,
+        
+        Date_Created,
+        Date_Closed,
+        Date_LastModified,
+        Date_FirstResponseToCustomer,
+        
+        Case_Number,
+        Case_RecordType,
+        Case_Status,
+        Case_Origin,
+        Case_OriginAbs,
+        Case_CSAT,
+        Case_Disposition,
+        Case_DispositionReason,
+        Case_Disposition_Detailed,
+        Case_Product,
+        
+        Case_FirstResponseToCustomerSeconds,
+        Case_HandleTimeHours,
+        Case_FRBusinessHours,
+        1 as freq
 
+    from V_Case
+    where Date_Created >= '2023-01-01'
+'''
+
+# Set DataFrames
+case = Therabody.select(query)
+case_origin = case[['Case_OriginAbs', 'freq']]
 
 # Init matplotlib style
 style.use('ggplot')
 
+# Group data by Frequency
+origin_count = case_origin.groupby(['Case_OriginAbs']).count()
+# print(origin_count)
 
-# Group data
-sales_grouped = sales[['ProductName', 'OrderQty', 'LineTotal']].groupby(['ProductName']).sum()
+# Order data
+origin_frequency = origin_count.sort_values('freq', ascending=False)#.iloc[5:15]
+print(origin_frequency)
 
+# Get relative_frequency and totals
+origin_relative_frequency = origin_frequency['freq'].cumsum()
+total_count = origin_frequency['freq'].sum()
+origin_frequency['cum_freq'] = origin_relative_frequency / total_count * 100
+print(origin_frequency)
 
-# Create Pareto's Chart
-    # Get Frequency of data and Sort
-sales_frequency = sales[['ProductName', 'OrderQty']].rename(columns={'OrderQty': 'freq'}).groupby(['ProductName']).count()
-sales_frequency = sales_frequency.sort_values('freq', ascending=False).iloc[5:15]
-
-    # Adj Index
-sales_frequency.index = sales_frequency.index.astype(str)
-
-    # Get relative_frequency and totals
-relative_frequency = sales_frequency['freq'].cumsum()
-total_count = sales_frequency['freq'].sum()
-sales_frequency['cum_freq'] = relative_frequency / total_count * 100
-
-    # Plot Pareto's Chart
+# Plot Pareto's Chart
 fig, ax = plt.subplots()
 ax2 = ax.twinx()
-ax.bar(sales_frequency.index, sales_frequency["freq"], color="C0")
-ax2.plot(sales_frequency.index, sales_frequency["cum_freq"], color="C1", marker="o", ms=5)
+ax.bar(origin_frequency.index, origin_frequency["freq"], color="C0")
+ax2.plot(origin_frequency.index, origin_frequency["cum_freq"], color="C1", marker="o", ms=5)
 
+plt.ylim([0, 110])
 plt.title("Pareto's Chart")
 plt.xlabel("Product")
 plt.ylabel("Frequency")
-plt.show() 
+plt.show()

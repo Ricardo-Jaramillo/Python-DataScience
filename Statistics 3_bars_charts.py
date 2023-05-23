@@ -6,62 +6,90 @@ from matplotlib import style
 
 
 # Init SQLServer connection and get data
-AdvWorks = SQLServer('AdventureWorks2019')
-query = 'Select * from V_sales_detailed'
-sales = AdvWorks.select(query)
+Therabody = SQLServer('DbTherabody')
+query = '''
+    select
+        Emp,
+        agent_name,
+        
+        Date_Created,
+        Date_Closed,
+        Date_LastModified,
+        Date_FirstResponseToCustomer,
+        
+        Case_Number,
+        Case_RecordType,
+        Case_Status,
+        Case_Origin,
+        Case_OriginAbs,
+        Case_CSAT,
+        Case_Disposition,
+        Case_DispositionReason,
+        Case_Disposition_Detailed,
+        Case_Product,
+        
+        Case_FirstResponseToCustomerSeconds / 3600 Case_FRHours,
+        Case_HandleTimeHours,
+        Case_FRBusinessHours,
+        1 as freq
 
+    from V_Case
+    where Date_Created >= '2023-01-01'
+'''
+
+# Set DataFrames
+case = Therabody.select(query)
+data_bars = case[[
+                    'Case_CSAT',
+                    'Case_FRHours', 
+                    'Case_HandleTimeHours',
+                    'Case_FRBusinessHours'
+                ]].query('Case_CSAT != ""').replace('', np.nan)
 
 # Init matplotlib style
 style.use('ggplot')
 
-
-# Group data
-sales_grouped = sales[['ProductName', 'OrderQty', 'LineTotal']].groupby(['ProductName']).sum()
-
+# Group and sort data
+data_bars = data_bars.groupby(['Case_CSAT']).mean() #.sort_values(by='Case_CSAT', ascending=False)
 
 # Plot bars chart
     # Simple bars
-sales_bars = sales_grouped.sort_values('OrderQty').iloc[:5]
-array_xticks = np.arange(len(sales_bars.index))
+array_xticks = np.arange(len(data_bars.index))
 width = 0.2
 
 plt.figure(figsize=(10, 5))
-plt.bar(array_xticks, sales_bars['OrderQty'], color='royalblue', width=width, label='Qty')
-plt.bar(array_xticks + width, sales_bars['LineTotal'] / 100, color='purple', width=width, label='Total cost')
+plt.bar(array_xticks, data_bars['Case_FRHours'], color='royalblue', width=width, label='FRT')
+plt.bar(array_xticks + width, data_bars['Case_HandleTimeHours'], color='purple', width=width, label='AHT')
+plt.bar(array_xticks - width, data_bars['Case_FRBusinessHours'], color='red', width=width, label='FRT BH')
 
-plt.xticks(array_xticks, sales_bars.index)
-plt.title("Product Qty and Total cost")
-plt.xlabel("Product")
-plt.ylabel("Total")
+plt.xticks(array_xticks, data_bars.index, rotation=90)
+plt.tight_layout()
+plt.title("Metrics by CSAT")
+plt.xlabel("CSAT")
+plt.ylabel("Min")
 plt.legend()
 plt.show()
 
     # Stacked bars
-sales_bars = sales_grouped.sort_values('OrderQty').iloc[:5]
-array_xticks = np.arange(len(sales_bars.index))
-width = 0.2
-
 plt.figure(figsize=(10, 5))
-plt.bar(array_xticks, sales_bars['OrderQty'], color='royalblue', width=width, label='Qty')
-plt.bar(array_xticks, sales_bars['LineTotal'] / 100, bottom=sales_bars['OrderQty'], color='purple', width=width, label='Total cost')
+plt.bar(array_xticks, data_bars['Case_FRHours'], color='royalblue', width=width, label='FRT')
+plt.bar(array_xticks, data_bars['Case_HandleTimeHours'], color='purple', width=width, label='AHT', bottom=data_bars['Case_FRHours'])
+plt.bar(array_xticks, data_bars['Case_FRBusinessHours'], color='red', width=width, label='FRT BH', bottom=data_bars['Case_HandleTimeHours'])
 
-plt.xticks(array_xticks, sales_bars.index)
-plt.title("Product Qty and Total cost")
-plt.xlabel("Product")
-plt.ylabel("Total")
+plt.xticks(array_xticks, data_bars.index, rotation=90)
+plt.tight_layout()
+plt.title("Metrics by CSAT")
+plt.xlabel("CSAT")
+plt.ylabel("Min")
 plt.legend()
 plt.show()
 
     # Stacked horizontal bars
-sales_bars = sales_grouped.sort_values('OrderQty').iloc[:5]
-array_xticks = np.arange(len(sales_bars.index))
-width = 0.2
-
 plt.figure(figsize=(10, 5))
-plt.barh(array_xticks, sales_bars['OrderQty'], color='royalblue', height=width, label='Qty')
-plt.barh(array_xticks, sales_bars['LineTotal'] / 100, left=sales_bars['OrderQty'], color='purple', height=width, label='Total cost')
+plt.barh(array_xticks, data_bars['Case_FRHours'], color='royalblue', height=width, label='FRT')
+plt.barh(array_xticks, data_bars['Case_HandleTimeHours'], left=data_bars['Case_FRHours'], color='purple', height=width, label='Case_FRHours')
 
-plt.yticks(array_xticks, sales_bars.index)
+plt.yticks(array_xticks, data_bars.index)
 plt.title("Product Qty and Total cost")
 plt.ylabel("Product")
 plt.xlabel("Total")
