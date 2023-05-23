@@ -34,13 +34,13 @@ query = '''
         1 as freq
 
     from V_Case
-    where Date_Created >= '2023-01-01'
+    where Date_Created >= '2023-05-01'
 '''
 
 # Reach data
-# case = Therabody.select(query)
-# case.to_csv('case.csv')
-case = pd.read_csv('case.csv')
+case = Therabody.select(query)
+case.to_csv('case.csv')
+# case = pd.read_csv('case.csv')
 
 # Set DataFrames
 case_DispositionReason = case[['Case_DispositionReason', 'freq']].groupby(['Case_DispositionReason']).count() # .query('Case_DispositionReason != ""')
@@ -54,27 +54,30 @@ case_metrics = case[[
                     'Case_FRHours'
                 ]].query('Case_CSAT != ""').replace('', np.nan).groupby(['Case_CSAT']).mean()
 
+case_scatter = case[['Date_Created', 'Case_FRBusinessHours', 'Case_CSAT']]
+
 # Init Stats class
 thera = DataScience()
 
 # Plot Paretos chart
-thera.pareto(case_DispositionReason, plot=True, xlim=False)
+# thera.pareto(case_DispositionReason, plot=True, xlim=False)
 
 # Plot Histogram
-thera.histogram(case_HandleTimeHours, bins=10, kde=True)
+# thera.histogram(case_HandleTimeHours, bins=10, kde=True)
 
 # Plot Bars charts
-thera.bars(case_metrics, type='simple', stacked=False, rotation=0, table=False)
-thera.bars(case_metrics, type='simple', stacked=False, rotation=0, table=True)
-thera.bars(case_metrics, type='simple', stacked=True, rotation=0, table=False)
-thera.bars(case_metrics, type='simple', stacked=True, rotation=0, table=True)
-thera.bars(case_metrics, type='horizontal', stacked=False, rotation=0, table=False)
-thera.bars(case_metrics, type='horizontal', stacked=False, rotation=0, table=True)
-thera.bars(case_metrics, type='horizontal', stacked=True, rotation=0, table=False)
-thera.bars(case_metrics, type='horizontal', stacked=True, rotation=0, table=True)
+# thera.bars(case_metrics, type='simple', stacked=False, rotation=0, table=False)
+# thera.bars(case_metrics, type='simple', stacked=False, rotation=0, table=True)
+# thera.bars(case_metrics, type='simple', stacked=True, rotation=0, table=False)
+# thera.bars(case_metrics, type='simple', stacked=True, rotation=0, table=True)
+# thera.bars(case_metrics, type='horizontal', stacked=False, rotation=0, table=False)
+# thera.bars(case_metrics, type='horizontal', stacked=True, rotation=0, table=False)
 
 # Describe mean, std, median and skew
-thera.skew(case_HandleTimeHours)
+# thera.skew(case_HandleTimeHours)
 
 # Plot probplot
-thera.probplot(case_HandleTimeHours)
+# thera.probplot(case_HandleTimeHours)
+
+# Plot scatter
+thera.scatter(case_scatter, colors=False, factor=10)

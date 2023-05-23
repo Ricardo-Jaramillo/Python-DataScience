@@ -157,3 +157,19 @@ class DataScience():
         fig, (ax) = plt.subplots(figsize = (4,4))
         stats.probplot(data, dist='norm', plot=ax)
         plt.show()
+
+    
+    # n x 2 DataFrame (n x 3 if area passed to method) following the order: x, y, area (area optional)
+    def scatter(self, data, colors=False, factor=1):
+        try:
+            area = data[data.columns[2]] * factor
+        except:
+            area = None
+
+        if colors:
+            colors = np.arange(len(data.index))
+        else:
+            colors = None
+
+        plt.scatter(data[data.columns[0]], data[data.columns[1]], s=area, c=colors, alpha=0.5)
+        plt.show()
