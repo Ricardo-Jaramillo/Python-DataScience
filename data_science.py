@@ -11,7 +11,7 @@ import numpy as np
 style.use('ggplot')
 
 
-class Stats():
+class DataScience():
     def __init__(self):
         # self.data = data
         pass
@@ -144,6 +144,32 @@ class Stats():
     
 
     def probplot(self, data):
+        '''
+        ppplot (Probability-Probability plot)
+            Compares the sample and theoretical probabilities (percentiles).
+        
+        qqplot (Quantile-Quantile plot)
+            Compares the sample and theoretical quantiles
+        
+        probplot (Probability plot)
+            Same as a Q-Q plot, however probabilities are shown in the scale of the theoretical distribution (x-axis) and the y-axis contains unscaled quantiles of the sample data.
+        '''
         fig, (ax) = plt.subplots(figsize = (4,4))
         stats.probplot(data, dist='norm', plot=ax)
+        plt.show()
+
+    
+    # n x 2 DataFrame (n x 3 if area passed to method) following the order: x, y, area (area optional)
+    def scatter(self, data, colors=False, factor=1):
+        try:
+            area = data[data.columns[2]] * factor
+        except:
+            area = None
+
+        if colors:
+            colors = np.arange(len(data.index))
+        else:
+            colors = None
+
+        plt.scatter(data[data.columns[0]], data[data.columns[1]], s=area, c=colors, alpha=0.5)
         plt.show()
