@@ -1,4 +1,4 @@
-from data_science import Stats
+from data_science import DataScience
 from SQLServer import SQLServer
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -55,7 +55,7 @@ case_metrics = case[[
                 ]].query('Case_CSAT != ""').replace('', np.nan).groupby(['Case_CSAT']).mean()
 
 # Init Stats class
-thera = Stats()
+thera = DataScience()
 
 # Plot Paretos chart
 thera.pareto(case_DispositionReason, plot=True, xlim=False)

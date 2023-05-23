@@ -11,7 +11,7 @@ import numpy as np
 style.use('ggplot')
 
 
-class Stats():
+class DataScience():
     def __init__(self):
         # self.data = data
         pass
