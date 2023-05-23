@@ -13,15 +13,17 @@
 For this project I used a connection to a SQL Database, so the pyodbc library is installed. But you could either import a csv file or make a connection to where your dataset is located.
 
 
-## Topics
-### Methods included in the data_science Class
+## Methods included in the data_science Class
+### Plots
 1. Pareto's Chart
 2. Histogram
 3. Bars' charts
-4. Skew
+4. Scatter Plot
 5. Probability Plot
-6. Variance, Standard Deviation and Variance coefficient
-7. Covariance
+
+### Measures of central tendency and other statistical metrics
+6. Skew
+7. Variance, Covariance, Standard Deviation and Variance coefficient
 8. Correlation coefficient
 9. Normal Standard Distribution
 10. Confidence Interval Z
