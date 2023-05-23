@@ -10,14 +10,14 @@ Therabody = SQLServer('DbTherabody')
 query = '''
     select
         Emp,
-        agent_name,
+        --agent_name,
         
         Date_Created,
         Date_Closed,
         Date_LastModified,
         Date_FirstResponseToCustomer,
         
-        Case_Number,
+        --Case_Number,
         Case_RecordType,
         Case_Status,
         Case_Origin,
@@ -26,7 +26,7 @@ query = '''
         Case_Disposition,
         Case_DispositionReason,
         Case_Disposition_Detailed,
-        Case_Product,
+        --Case_Product,
         
         Case_FirstResponseToCustomerSeconds / 3600 Case_FRHours,
         Case_HandleTimeHours,

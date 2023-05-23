@@ -144,6 +144,16 @@ class Stats():
     
 
     def probplot(self, data):
+        '''
+        ppplot (Probability-Probability plot)
+            Compares the sample and theoretical probabilities (percentiles).
+        
+        qqplot (Quantile-Quantile plot)
+            Compares the sample and theoretical quantiles
+        
+        probplot (Probability plot)
+            Same as a Q-Q plot, however probabilities are shown in the scale of the theoretical distribution (x-axis) and the y-axis contains unscaled quantiles of the sample data.
+        '''
         fig, (ax) = plt.subplots(figsize = (4,4))
         stats.probplot(data, dist='norm', plot=ax)
         plt.show()
