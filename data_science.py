@@ -173,3 +173,16 @@ class DataScience():
 
         plt.scatter(data[data.columns[0]], data[data.columns[1]], s=area, c=colors, alpha=0.5)
         plt.show()
+    
+
+    # n x 1 column dataset
+    def var(self, data):
+        var = np.var(data)
+        std = np.std(data)
+        var_coeff = stats.variation(data)
+
+        print(f'var: {var}')
+        print(f'std: {std}')
+        print(f'var_coeff: {var_coeff}')
+
+        return (var, std, var_coeff)

@@ -10,14 +10,14 @@ Therabody = SQLServer('DbTherabody')
 query = '''
     select
         Emp,
-        --agent_name,
+        agent_name,
         
         Date_Created,
         Date_Closed,
         Date_LastModified,
         Date_FirstResponseToCustomer,
         
-        --Case_Number,
+        Case_Number,
         Case_RecordType,
         Case_Status,
         Case_Origin,
@@ -26,7 +26,7 @@ query = '''
         Case_Disposition,
         Case_DispositionReason,
         Case_Disposition_Detailed,
-        --Case_Product,
+        Case_Product,
         
         Case_FirstResponseToCustomerSeconds / 3600 Case_FRHours,
         Case_HandleTimeHours,
@@ -34,7 +34,7 @@ query = '''
         1 as freq
 
     from V_Case
-    where Date_Created >= '2023-05-01'
+    where Date_Created >= '2023-01-01'
 '''
 
 # Reach data
@@ -55,6 +55,8 @@ case_metrics = case[[
                 ]].query('Case_CSAT != ""').replace('', np.nan).groupby(['Case_CSAT']).mean()
 
 case_scatter = case[['Date_Created', 'Case_FRBusinessHours', 'Case_CSAT']]
+
+case_CSATProduct = case[['Case_Product', 'Case_CSAT']].groupby(['Case_Product']).mean()
 
 # Init Stats class
 thera = DataScience()
@@ -80,4 +82,7 @@ thera = DataScience()
 # thera.probplot(case_HandleTimeHours)
 
 # Plot scatter
-thera.scatter(case_scatter, colors=False, factor=10)
+# thera.scatter(case_scatter, colors=False, factor=10)
+
+# Describe var, std and var_coeff
+thera.var(case_CSATProduct['Case_CSAT'])
