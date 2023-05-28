@@ -57,6 +57,48 @@ class DataScience():
 
         return (mean, var, std, var_coeff)
     
+
+    # n x m DataFrame. Return an n x m cov_matrix and corr_coeff matrix.
+    def cov_corr(self, data, plot=False):
+        
+        cov_matrix = np.cov(data)
+        corr_coeff_matrix = np.corrcoef(data)
+        
+        if plot:
+            # Covariance Matrix
+            sns.heatmap(cov_matrix, annot=True, fmt='g', xticklabels=data.index.to_list(), yticklabels=data.index.to_list())
+            plt.title('Covariance Matrix')
+            plt.tight_layout()
+            plt.show()
+
+            # Correlation Coefficient Matrix
+            sns.heatmap(corr_coeff_matrix, annot=True, fmt='g', xticklabels=data.index.to_list(), yticklabels=data.index.to_list())
+            plt.title('Correlation coefficient Matrix')
+            plt.tight_layout()
+            plt.show()
+
+        print(cov_matrix)
+        print(corr_coeff_matrix)
+
+        return (cov_matrix, corr_coeff_matrix)
+    
+
+    # n x 2 dataset. y_actual, y_predicted order
+    def confussion_matrix(self, data, plot=True):
+        '''
+            Working with non numeric data
+            df['y_actual'] = df['y_actual'].map({'Yes': 1, 'No': 0})
+            df['y_predicted'] = df['y_predicted'].map({'Yes': 1, 'No': 0})
+        '''
+        confusion_matrix = pd.crosstab(data[data.columns[0]], data[data.columns[1]], rownames=['Actual'], colnames=['Predicted'], margins=True)
+        
+        if plot:
+            sns.heatmap(confusion_matrix, annot=True)
+            plt.show()
+
+        print(confusion_matrix)
+
+        return confusion_matrix
     
     # n x 2 Table with variable name and 'freq' grouped by variable name (freq must be in last position)
     def pareto(self, data, plot=False, xlim=False):
@@ -206,3 +248,4 @@ class DataScience():
         plt.show()
     
 
+    

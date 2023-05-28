@@ -5,23 +5,23 @@ import seaborn as sns
 
 
 # Get a visual representation of the Covariance Matrix
-A = [45, 37, 42, 35, 39]
-B = [38, 31, 26, 28, 33]
-C = [10, 15, 17, 21, 12]
+A = [0, 3, 5, 9, 11]
+B = [-2, -6, -8, -11, -13]
+C = [-10, -15, -17, -21, -27]
 
 data = np.array([A, B, C])
 
         # cov_matrix = pd.DataFrame.cov(df)
-cov_matrix = np.cov(data, bias=False)
+cov_matrix = np.cov(data)
 print(cov_matrix)
-sns.heatmap(cov_matrix, annot=True, fmt='g')
+sns.heatmap(cov_matrix, annot=True, fmt='g', xticklabels=['A', 'B', 'C'], yticklabels=['A', 'B', 'C'])
 plt.show()
 
 
 # Correlation Coefficient
 corrcoeff_matrix = np.corrcoef(data, bias=False)
 print(corrcoeff_matrix)
-sns.heatmap(corrcoeff_matrix, annot=True, fmt='g')
+sns.heatmap(corrcoeff_matrix, annot=True, fmt='g', xticklabels=['A', 'B', 'C'], yticklabels=['A', 'B', 'C'])
 plt.show()
 
 

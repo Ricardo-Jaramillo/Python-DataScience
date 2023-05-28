@@ -48,18 +48,37 @@ case_DispositionReason = case[['Case_DispositionReason', 'freq']].groupby(['Case
 case_HandleTimeHours = case['Case_HandleTimeHours'][case['Case_HandleTimeHours'] <= 20]
 
 case_metrics = case[[
+                    'Case_Product',
                     'Case_CSAT',
                     'Case_HandleTimeHours',
                     'Case_FRBusinessHours',
                     'Case_FRHours'
-                ]].query('Case_CSAT != ""').replace('', np.nan).groupby(['Case_CSAT']).mean()
+                ]].query('Case_CSAT != ""').groupby(['Case_Product']).mean()
 
 case_scatter = case[['Date_Created', 'Case_FRBusinessHours', 'Case_CSAT']]
 
 case_CSATProduct = case[['Case_Product', 'Case_CSAT']].groupby(['Case_Product']).mean()
 
+# Confussion Matrix
+data = {'y_actual':    [1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0],
+        'y_predicted': [1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 0]
+        }
+data_confussion_matrix = pd.DataFrame(data)
+
 # Init Stats class
 thera = DataScience()
+
+# Describe mean, std, median and skew
+# thera.skew(case_HandleTimeHours)
+
+# Describe var, std and var_coeff
+# thera.var(case_CSATProduct['Case_CSAT'], sample=True)
+
+# Covariance and Correlation coefficient Matrix
+# thera.cov_corr(case_metrics, plot=True)
+
+# Covariance and Correlation coefficient Matrix
+# thera.confussion_matrix(data_confussion_matrix, plot=True)
 
 # Plot Paretos chart
 # thera.pareto(case_DispositionReason, plot=True, xlim=False)
@@ -75,14 +94,9 @@ thera = DataScience()
 # thera.bars(case_metrics, type='horizontal', stacked=False, rotation=0, table=False)
 # thera.bars(case_metrics, type='horizontal', stacked=True, rotation=0, table=False)
 
-# Describe mean, std, median and skew
-# thera.skew(case_HandleTimeHours)
-
 # Plot probplot
 # thera.probplot(case_HandleTimeHours)
 
 # Plot scatter
 # thera.scatter(case_scatter, colors=False, factor=10)
 
-# Describe var, std and var_coeff
-thera.var(case_CSATProduct['Case_CSAT'], sample=True)
