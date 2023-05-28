@@ -16,6 +16,47 @@ class DataScience():
         # self.data = data
         pass
 
+
+    # n x 1 dataset
+    def skew(self, data):
+        # Print Mean and Std. Deviation. Describe Data
+        mean = np.mean(data)
+        std = np.std(data)
+        median = np.median(data)
+
+        print('Mean: %0.3f +/-std %0.3f' % (mean, std))
+        print('Median: %0.3f' % median)
+
+        # Skew
+        skew = stats.skew(data)
+        print('\nSkewness for data : ', skew)
+
+        return (mean, median, std, skew)
+
+    
+        # n x 1 column dataset
+    def var(self, data, sample=False):
+        '''
+        Empirical Rule
+        68-95-99.7
+        '''
+        if sample:
+            ddof = 1
+        else:
+            ddof = 0
+
+        mean = np.mean(data)
+        var = np.var(data, ddof=ddof)
+        std = np.std(data, ddof=ddof)
+        var_coeff = std / mean
+
+        print(f'mean: {mean}')
+        print(f'var: {var}')
+        print(f'std: {std}')
+        print(f'var_coeff: {var_coeff}')
+
+        return (mean, var, std, var_coeff)
+    
     
     # n x 2 Table with variable name and 'freq' grouped by variable name (freq must be in last position)
     def pareto(self, data, plot=False, xlim=False):
@@ -133,16 +174,6 @@ class DataScience():
         plt.show()
 
     
-    # n x 1 dataset
-    def skew(self, data):
-        # Print Mean and Std. Deviation. Describe Data
-        print("Mean: %0.3f +/-std %0.3f" % (np.mean(data), np.std(data)))
-        print('Median: %0.3f' % np.median(data))
-
-        # Skew
-        print('\nSkewness for data : ', stats.skew(data))
-    
-
     def probplot(self, data):
         '''
         ppplot (Probability-Probability plot)
@@ -175,14 +206,3 @@ class DataScience():
         plt.show()
     
 
-    # n x 1 column dataset
-    def var(self, data):
-        var = np.var(data)
-        std = np.std(data)
-        var_coeff = stats.variation(data)
-
-        print(f'var: {var}')
-        print(f'std: {std}')
-        print(f'var_coeff: {var_coeff}')
-
-        return (var, std, var_coeff)

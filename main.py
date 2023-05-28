@@ -85,4 +85,4 @@ thera = DataScience()
 # thera.scatter(case_scatter, colors=False, factor=10)
 
 # Describe var, std and var_coeff
-thera.var(case_CSATProduct['Case_CSAT'])
+thera.var(case_CSATProduct['Case_CSAT'], sample=True)
