@@ -100,6 +100,7 @@ class DataScience():
 
         return confusion_matrix
     
+
     # n x 2 Table with variable name and 'freq' grouped by variable name (freq must be in last position)
     def pareto(self, data, plot=False, xlim=False):
         # Order data
@@ -146,13 +147,6 @@ class DataScience():
     
     # list with values to plot
     def histogram(self, data_histogram, bins, kde=False):
-        # Histogram type 1
-        # plt.hist(data_histogram, bins=bins, color = "blue", rwidth=0.9, alpha=0.5)
-        # plt.title("Histogram")
-        # plt.xlabel("Value")
-        # plt.ylabel("Frequency")
-
-        # Histogram type 2
         fig, ax = plt.subplots()
         sns.histplot(data=data_histogram, x=data_histogram, kde=kde, bins=bins, alpha=0.5)
         ax.set_title('Histogram')
