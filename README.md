@@ -25,10 +25,10 @@ For this project I used a connection to a SQL Database, so the pyodbc library is
 6. Skew
 7. Variance, Covariance, Standard Deviation and Variance coefficient
 8. Correlation coefficient
-9. 
-10. Confidence Interval Z (std population known)
+9. Standarize Normal Distribution (zscore)
+10. Confidence Interval Z (std population known) (Not implemented since std populations mostly unknown)
 11. Confidence Interval T (std population unknown)
-12. Confidence Interval. Independent Samples
+12. Confidence Interval. Independent Samples ########## PENDING ##########
 13. Confidence Interval. Dependent Samples
 14. Test for the mean. Population Variance known
 15. Test for the mean. Population Variance unknown
@@ -44,5 +44,3 @@ For this project I used a connection to a SQL Database, so the pyodbc library is
 
 ### Pending
 1. Probability distributions
-2. Central limit Theorem and standard error (stats.zscore)
-3. Fiability factor & Margin error

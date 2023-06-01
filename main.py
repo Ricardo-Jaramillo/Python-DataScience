@@ -45,7 +45,7 @@ case.to_csv('case.csv')
 # Set DataFrames
 case_DispositionReason = case[['Case_DispositionReason', 'freq']].groupby(['Case_DispositionReason']).count() # .query('Case_DispositionReason != ""')
 
-case_HandleTimeHours = case['Case_HandleTimeHours'][case['Case_HandleTimeHours'] <= 20]
+case_HandleTimeHours = case['Case_HandleTimeHours'][(case['Case_HandleTimeHours'] <= 20) & (case['Case_HandleTimeHours'] > 0)]
 
 case_metrics = case[[
                     'Case_Product',
@@ -79,6 +79,14 @@ thera = DataScience()
 
 # Covariance and Correlation coefficient Matrix
 # thera.confussion_matrix(data_confussion_matrix, plot=True)
+
+# Standarize distribution
+# case_HandleTimeHours = thera.standarize_distribution(case_HandleTimeHours)
+# print(case_HandleTimeHours)
+
+# Confidence Interval
+# confidence = 0.95
+# thera.confidence_interval(case_HandleTimeHours, confidence)
 
 # Plot Paretos chart
 # thera.pareto(case_DispositionReason, plot=True, xlim=False)

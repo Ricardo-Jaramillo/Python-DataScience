@@ -101,6 +101,31 @@ class DataScience():
         return confusion_matrix
     
 
+    # n x 1 dataset
+    def standarize_distribution(self, data):
+        return stats.zscore(data)
+
+
+    # n x 1 dataset with a desired confidence level
+    def confidence_interval(self, data, confidence):
+        # specified for a sample, so ddof = 1
+        
+        # stats function
+        interval = stats.t.interval(confidence=confidence, df=len(data)-1, loc=np.mean(data), scale=stats.sem(data))
+        print(interval)
+
+        # manually calculated
+        # critical_value = stats.t.isf((1 - confidence)/2, len(data)-1)
+        # standard_error = np.std(data, ddof=1) / np.sqrt(len(data))
+        
+        # margin_error = critical_value * standard_error
+        # low_lim = np.mean(data) - margin_error
+        # max_lim = np.mean(data) + margin_error
+        # print(low_lim, max_lim)
+        
+        return interval
+    
+    
     # n x 2 Table with variable name and 'freq' grouped by variable name (freq must be in last position)
     def pareto(self, data, plot=False, xlim=False):
         # Order data
