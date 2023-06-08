@@ -1,3 +1,4 @@
+from numpy.random import default_rng
 import matplotlib.pyplot as plt
 from SQLServer import SQLServer
 from matplotlib import style
@@ -10,75 +11,95 @@ import numpy as np
 # Init matplotlib style
 style.use('ggplot')
 
+# Setting a seed for random numbers
+# print(SeedSequence().entropy)
+rng = default_rng(122708692400277160069775657973126599887)
+
 
 class DataScience():
     def __init__(self):
         # self.data = data
         pass
 
-
-    # n x 1 dataset
-    def skew(self, data):
-        # Print Mean and Std. Deviation. Describe Data
-        mean = np.mean(data)
-        std = np.std(data)
-        median = np.median(data)
-
-        print('Mean: %0.3f +/-std %0.3f' % (mean, std))
-        print('Median: %0.3f' % median)
-
-        # Skew
-        skew = stats.skew(data)
-        print('\nSkewness for data : ', skew)
-
-        return (mean, median, std, skew)
-
     
-        # n x 1 column dataset
-    def var(self, data, sample=False):
+    # n x 1 dataset
+    def describe(self, data, sample=True, standarize=False):
         '''
-        Empirical Rule
-        68-95-99.7
+        Empirical Rule for std -> 68-95-99.7
+
+        # populate distribution with sample params
+        data = stats.t.rvs(df=df, size=1000, scale=scale, loc=loc) #, random_state=rng)
+
+        # Manually calculated
+        skew = stats.skew(data)
+        kurtosis = stats.kurtosis(data)
+        var = np.var(data, ddof=ddof)
+        var_coeff = scale / loc
         '''
+
         if sample:
             ddof = 1
         else:
             ddof = 0
 
-        mean = np.mean(data)
-        var = np.var(data, ddof=ddof)
-        std = np.std(data, ddof=ddof)
-        var_coeff = std / mean
+        if standarize:
+            data = self.standarize_distribution(data)
+        
+        # Set distribution variables
+        m, v, s, k = stats.t.stats(df=len(data) - 1, scale=np.std(data, ddof=ddof), loc=np.mean(data), moments='mvsk')
+        std = v / (len(data) - ddof)
+        vc = std / m
 
-        print(f'mean: {mean}')
-        print(f'var: {var}')
-        print(f'std: {std}')
-        print(f'var_coeff: {var_coeff}')
+        # Set sample variables
+        sn, (smin, smax), sm, sv, ss, sk = stats.describe(data, ddof=ddof)
+        sstd = np.sqrt(sv)
+        svc = sstd / sm
 
-        return (mean, var, std, var_coeff)
+        # Save in a DataFrame
+        dic = {
+            'distribution': {
+                'n': sn,
+                'mean': m,
+                'var': v,
+                'skew': s,
+                'kurtosis': k,
+                'std': std,
+                'var coefficient': vc
+            },
+            'sample': {
+                'n': sn,
+                'mean': sm,
+                'var': sv,
+                'skew': ss,
+                'kurtosis': sk,
+                'std': sstd,
+                'var coefficient': svc
+            }
+        }
+
+        desc_var = pd.DataFrame(dic)
+        print(desc_var)
+
+        return desc_var
     
 
     # n x m DataFrame. Return an n x m cov_matrix and corr_coeff matrix.
-    def cov_corr(self, data, plot=False):
+    def cov_corr(self, data):
         
         cov_matrix = np.cov(data)
         corr_coeff_matrix = np.corrcoef(data)
         
-        if plot:
-            # Covariance Matrix
-            sns.heatmap(cov_matrix, annot=True, fmt='g', xticklabels=data.index.to_list(), yticklabels=data.index.to_list())
-            plt.title('Covariance Matrix')
-            plt.tight_layout()
-            plt.show()
+        # Covariance Matrix
+        sns.heatmap(cov_matrix, annot=True, fmt='g', xticklabels=data.index.to_list(), yticklabels=data.index.to_list())
+        plt.title('Covariance Matrix')
+        plt.tight_layout()
+        plt.show()
 
-            # Correlation Coefficient Matrix
-            sns.heatmap(corr_coeff_matrix, annot=True, fmt='g', xticklabels=data.index.to_list(), yticklabels=data.index.to_list())
-            plt.title('Correlation coefficient Matrix')
-            plt.tight_layout()
-            plt.show()
-
-        print(cov_matrix)
-        print(corr_coeff_matrix)
+        # Correlation Coefficient Matrix
+        sns.heatmap(corr_coeff_matrix, annot=True, fmt='g', xticklabels=data.index.to_list(), yticklabels=data.index.to_list())
+        plt.title('Correlation coefficient Matrix')
+        plt.tight_layout()
+        plt.show()
 
         return (cov_matrix, corr_coeff_matrix)
     
@@ -108,20 +129,20 @@ class DataScience():
 
     # n x 1 dataset with a desired confidence level
     def confidence_interval(self, data, confidence):
-        # specified for a sample, so ddof = 1
+        '''
+        # Manually calculated. Specified for a sample, so ddof = 1
+        critical_value = stats.t.isf((1 - confidence)/2, len(data)-1)
+        standard_error = np.std(data, ddof=1) / np.sqrt(len(data))
+        
+        margin_error = critical_value * standard_error
+        low_lim = np.mean(data) - margin_error
+        max_lim = np.mean(data) + margin_error
+        print(low_lim, max_lim)
+        '''
         
         # stats function
         interval = stats.t.interval(confidence=confidence, df=len(data)-1, loc=np.mean(data), scale=stats.sem(data))
         print(interval)
-
-        # manually calculated
-        # critical_value = stats.t.isf((1 - confidence)/2, len(data)-1)
-        # standard_error = np.std(data, ddof=1) / np.sqrt(len(data))
-        
-        # margin_error = critical_value * standard_error
-        # low_lim = np.mean(data) - margin_error
-        # max_lim = np.mean(data) + margin_error
-        # print(low_lim, max_lim)
         
         return interval
     
@@ -265,6 +286,4 @@ class DataScience():
 
         plt.scatter(data[data.columns[0]], data[data.columns[1]], s=area, c=colors, alpha=0.5)
         plt.show()
-    
-
     

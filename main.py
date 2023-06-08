@@ -34,12 +34,12 @@ query = '''
         1 as freq
 
     from V_Case
-    where Date_Created >= '2023-01-01'
+    where Date_Created >= '2023-06-01'
 '''
 
 # Reach data
 case = Therabody.select(query)
-case.to_csv('case.csv')
+# case.to_csv('case.csv')
 # case = pd.read_csv('case.csv')
 
 # Set DataFrames
@@ -68,21 +68,17 @@ data_confussion_matrix = pd.DataFrame(data)
 # Init Stats class
 thera = DataScience()
 
-# Describe mean, std, median and skew
-# thera.skew(case_HandleTimeHours)
-
-# Describe var, std and var_coeff
-# thera.var(case_CSATProduct['Case_CSAT'], sample=True)
+# Describe & compare mvsk between distribution and Sample
+# thera.describe(case_CSATProduct['Case_CSAT'], sample=True, standarize=False)
 
 # Covariance and Correlation coefficient Matrix
-# thera.cov_corr(case_metrics, plot=True)
+# thera.cov_corr(case_metrics)
 
-# Covariance and Correlation coefficient Matrix
+# Plot Confussion matrix
 # thera.confussion_matrix(data_confussion_matrix, plot=True)
 
 # Standarize distribution
 # case_HandleTimeHours = thera.standarize_distribution(case_HandleTimeHours)
-# print(case_HandleTimeHours)
 
 # Confidence Interval
 # confidence = 0.95
