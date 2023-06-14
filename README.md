@@ -26,15 +26,17 @@ For this project I used a connection to a SQL Database, so the pyodbc library is
 7. Variance, Covariance, Standard Deviation and Variance coefficient
 8. Correlation coefficient
 9. Standarize Normal Distribution (zscore)
-10. Confidence Interval Z (std population known) (Not implemented since std populations mostly unknown)
-11. Confidence Interval T (std population unknown)
-12. Confidence Interval. Independent Samples ########## PENDING ##########
-13. Confidence Interval. Dependent Samples
-14. Test for the mean. Population Variance known
-15. Test for the mean. Population Variance unknown
-16. Test for the mean. Dependent Samples
-17. Test for the mean. Independent Samples
-18. Hypothesis test
+10. Confidence Intervals. Z & T for var population known or unknown, respectively
+11. Confidence Interval. Dependent Samples
+12. Confidence Interval. Independent Samples
+    1. Var populations known (populations normally distributed, var populations known, sample sizes differ)
+    2. Var populations unknown but assumed are equals
+    3. Var populations unknown but assumed are different (Not implemented)
+13. Test for the mean. Population Variance known
+14. Test for the mean. Population Variance unknown
+15. Test for the mean. Dependent Samples
+16. Test for the mean. Independent Samples
+17. Hypothesis test
 
 ### Statistical models with Python
 1. Simple linear Regression (StatsModels)

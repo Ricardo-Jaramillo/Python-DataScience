@@ -77,10 +77,9 @@ class DataScience():
             }
         }
 
-        desc_var = pd.DataFrame(dic)
-        print(desc_var)
+        df_desc = pd.DataFrame(dic)
 
-        return desc_var
+        return df_desc
     
 
     # n x m DataFrame. Return an n x m cov_matrix and corr_coeff matrix.
@@ -127,23 +126,57 @@ class DataScience():
         return stats.zscore(data)
 
 
-    # n x 1 dataset with a desired confidence level
-    def confidence_interval(self, data, confidence):
-        '''
-        # Manually calculated. Specified for a sample, so ddof = 1
-        critical_value = stats.t.isf((1 - confidence)/2, len(data)-1)
-        standard_error = np.std(data, ddof=1) / np.sqrt(len(data))
+    # n x 1 dataset or list of datasets with a desired confidence level. Must specify var population if known and assumed equal when required
+    def confidence_interval(self, data, confidence, var=None, var_assumed_equal=True):
         
+        # If data contains a unique dataset. (Confidence Interval of a DataSet or Dependent samples)
+        if not any(isinstance(el, list) for el in data):
+
+            if var:
+                critical_value = stats.norm.ppf(confidence + (1 - confidence) / 2)
+            else:
+                critical_value = stats.t.isf((1 - confidence)/2, len(data)-1)
+                var = np.var(data, ddof=1)
+                # With stats function
+                # interval = stats.t.interval(confidence=confidence, df=len(data)-1, loc=np.mean(data), scale=stats.sem(data))
+            
+            m = np.mean(data)
+            standard_error = np.sqrt(var / len(data))
+        
+        # If data is a list of datasets. (Independent samples)
+        else:
+            a = self.describe(data[0])['sample'].loc[['n', 'mean', 'var']]
+            b = self.describe(data[1])['sample'].loc[['n', 'mean', 'var']]
+            
+            # Var known
+            if var:
+                m = a['mean'] - b['mean']
+                critical_value = stats.norm.ppf(confidence + (1 - confidence) / 2)
+                standard_error = np.sqrt(var[0] / a['n'] + var[1] / b['n'])
+
+            # Var unknown but assumed equal
+            elif var_assumed_equal:
+                m = a['mean'] - b['mean']
+                var = ((a['n'] - 1) * a['var'] + (b['n'] - 1) * b['var']) / (a['n'] + b['n'] - 2)
+                critical_value = stats.t.isf((1 - confidence)/2, a['n'] + b['n'] - 2)
+                standard_error = np.sqrt(var / a['n'] + var / b['n'])
+            
+            # Var unknown but assumed different
+            else:
+                m = a['mean'] - b['mean']
+                
+                df = ((a['var'] / a['n'] + b['var'] / b['n']) ** 2) / ((a['var'] / a['n']) ** 2 / (a['n'] - 1) + (b['var'] / b['n']) ** 2 / (b['n'] - 1))
+                
+                critical_value = stats.t.isf((1 - confidence)/2, df)
+                standard_error = np.sqrt(a['var'] / a['n'] + b['var'] / b['n'])
+
         margin_error = critical_value * standard_error
-        low_lim = np.mean(data) - margin_error
-        max_lim = np.mean(data) + margin_error
-        print(low_lim, max_lim)
-        '''
+        low_lim = m - margin_error
+        max_lim = m + margin_error
         
-        # stats function
-        interval = stats.t.interval(confidence=confidence, df=len(data)-1, loc=np.mean(data), scale=stats.sem(data))
+        interval = (low_lim, max_lim)
         print(interval)
-        
+        print(m, var, standard_error, critical_value)
         return interval
     
     

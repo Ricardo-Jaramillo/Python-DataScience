@@ -80,9 +80,9 @@ thera = DataScience()
 # Standarize distribution
 # case_HandleTimeHours = thera.standarize_distribution(case_HandleTimeHours)
 
-# Confidence Interval
+# Confidence Interval. Specify std if known
 # confidence = 0.95
-# thera.confidence_interval(case_HandleTimeHours, confidence)
+# thera.confidence_interval(case_HandleTimeHours, confidence, var=None, var_assumed_equal=True)
 
 # Plot Paretos chart
 # thera.pareto(case_DispositionReason, plot=True, xlim=False)
