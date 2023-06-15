@@ -1,9 +1,7 @@
-from data_science import DataScience
+from data_science import Stats
+from data_science import Regressions
 from SQLServer import SQLServer
-import matplotlib.pyplot as plt
 import pandas as pd
-import numpy as np
-from matplotlib import style
 
 # Init SQLServer connection and get data
 Therabody = SQLServer('DbTherabody')
@@ -66,45 +64,50 @@ data = {'y_actual':    [1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0],
 data_confussion_matrix = pd.DataFrame(data)
 
 # Init Stats class
-thera = DataScience()
+stats = Stats()
 
 # Describe & compare mvsk between distribution and Sample
-# thera.describe(case_CSATProduct['Case_CSAT'], sample=True, standarize=False)
+# vars = stats.describe(case_CSATProduct['Case_CSAT'], sample=True, standarize=False)
+# print(vars)
 
 # Covariance and Correlation coefficient Matrix
-# thera.cov_corr(case_metrics)
+# stats.cov_corr(case_metrics)
 
 # Plot Confussion matrix
-# thera.confussion_matrix(data_confussion_matrix, plot=True)
+# stats.confussion_matrix(data_confussion_matrix, plot=True)
 
 # Standarize distribution
-# case_HandleTimeHours = thera.standarize_distribution(case_HandleTimeHours)
+# a = stats.standarize_distribution(case_HandleTimeHours)
+# print(a)
 
 # Apply Central Limit Theorem
-# case_HandleTimeHours = thera.central_limit(case_HandleTimeHours, n_samples=1000, frac=0.6)
+# a = stats.central_limit(case_HandleTimeHours, n_samples=1000, frac=0.6)
+# print(a)
 
 # Confidence Interval. Specify var if known. Specify Hypothesis Test if needed
 # a = case_HandleTimeHours
 # confidence = 0.90
-# thera.confidence_interval(a, confidence, bilateral=False, var=None, var_assumed_equal=True, p_Test=None)
+# stats.confidence_interval(a, confidence, bilateral=False, var=None, var_assumed_equal=True, p_Test=None)
 
 # Plot Paretos chart
-# thera.pareto(case_DispositionReason, plot=True, xlim=False)
+# stats.pareto(case_DispositionReason, plot=True, xlim=False)
 
 # Plot Histogram
-# thera.histogram(case_HandleTimeHours, bins=10, kde=True)
+# stats.histogram(case_HandleTimeHours, bins=10, kde=True)
 
 # Plot Bars charts
-# thera.bars(case_metrics, type='simple', stacked=False, rotation=0, table=False)
-# thera.bars(case_metrics, type='simple', stacked=False, rotation=0, table=True)
-# thera.bars(case_metrics, type='simple', stacked=True, rotation=0, table=False)
-# thera.bars(case_metrics, type='simple', stacked=True, rotation=0, table=True)
-# thera.bars(case_metrics, type='horizontal', stacked=False, rotation=0, table=False)
-# thera.bars(case_metrics, type='horizontal', stacked=True, rotation=0, table=False)
+# stats.bars(case_metrics, type='simple', stacked=False, rotation=0, table=False)
+# stats.bars(case_metrics, type='simple', stacked=False, rotation=0, table=True)
+# stats.bars(case_metrics, type='simple', stacked=True, rotation=0, table=False)
+# stats.bars(case_metrics, type='simple', stacked=True, rotation=0, table=True)
+# stats.bars(case_metrics, type='horizontal', stacked=False, rotation=0, table=False)
+# stats.bars(case_metrics, type='horizontal', stacked=True, rotation=0, table=False)
 
 # Plot probplot
-# thera.probplot(case_HandleTimeHours)
+# stats.probplot(case_HandleTimeHours)
 
 # Plot scatter
-# thera.scatter(case_scatter, colors=False, factor=10)
+# stats.scatter(case_scatter, colors=False, factor=10)
 
+# Init Regressions class
+reg = Regressions()

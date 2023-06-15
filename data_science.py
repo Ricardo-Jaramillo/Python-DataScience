@@ -1,6 +1,5 @@
 from numpy.random import default_rng
 import matplotlib.pyplot as plt
-from SQLServer import SQLServer
 from matplotlib import style
 from scipy import stats
 import seaborn as sns
@@ -16,7 +15,7 @@ style.use('ggplot')
 rng = default_rng(122708692400277160069775657973126599887)
 
 
-class DataScience():
+class Stats():
     def __init__(self):
         # self.data = data
         pass
@@ -363,3 +362,7 @@ class DataScience():
         plt.scatter(data[data.columns[0]], data[data.columns[1]], s=area, c=colors, alpha=0.5)
         plt.show()
     
+
+class Regressions():
+    def __init__(self) -> None:
+        pass
