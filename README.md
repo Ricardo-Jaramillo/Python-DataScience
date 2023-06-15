@@ -13,7 +13,7 @@
 For this project I used a connection to a SQL Database, so the pyodbc library is installed. But you could either import a csv file or make a connection to where your dataset is located.
 
 
-## Methods included in the data_science Class
+## Methods included in the Statistics Class
 ### Plots
 1. Pareto's Chart
 2. Histogram
@@ -35,7 +35,7 @@ For this project I used a connection to a SQL Database, so the pyodbc library is
     3. Var populations unknown but assumed are different
 14. Hypothesis Test. (Applied for each type of Confidence Interval)
 
-### Statistical models with Python
+## Methods included in the Regressions Class
 1. Simple linear Regression (StatsModels)
 2. Multiple linear Regression (StatsModels)
 3. Dummy variables
