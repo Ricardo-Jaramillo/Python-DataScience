@@ -83,9 +83,10 @@ thera = DataScience()
 # Apply Central Limit Theorem
 # case_HandleTimeHours = thera.central_limit(case_HandleTimeHours, n_samples=1000, frac=0.6)
 
-# Confidence Interval. Specify std if known
-# confidence = 0.95
-# thera.confidence_interval(case_HandleTimeHours, confidence, var=None, var_assumed_equal=True)
+# Confidence Interval. Specify var if known. Specify Hypothesis Test if needed
+# a = case_HandleTimeHours
+# confidence = 0.90
+# thera.confidence_interval(a, confidence, bilateral=False, var=None, var_assumed_equal=True, p_Test=None)
 
 # Plot Paretos chart
 # thera.pareto(case_DispositionReason, plot=True, xlim=False)

@@ -143,15 +143,23 @@ class DataScience():
 
 
     # n x 1 dataset or list of datasets with a desired confidence level. Must specify var population if known and assumed equal when required
-    def confidence_interval(self, data, confidence, var=None, var_assumed_equal=True):
+    def confidence_interval(self, data, confidence, bilateral=True, var=None, var_assumed_equal=True, p_Test=None):
         
+        # set confidence according to wheather it is a unilateral or bilateral test
+        significance = 1 - confidence
+        
+        if bilateral:
+            significance = significance / 2
+            confidence = confidence + significance
+
         # If data contains a unique dataset. (Confidence Interval of a DataSet or Dependent samples)
         if not any(isinstance(el, list) for el in data):
 
             if var:
-                critical_value = stats.norm.ppf(confidence + (1 - confidence) / 2)
+                critical_value = stats.norm.ppf(confidence)
             else:
-                critical_value = stats.t.isf((1 - confidence)/2, len(data)-1)
+                df = len(data)-1
+                critical_value = stats.t.isf(significance, df)
                 var = np.var(data, ddof=1)
                 # With stats function
                 # interval = stats.t.interval(confidence=confidence, df=len(data)-1, loc=np.mean(data), scale=stats.sem(data))
@@ -167,33 +175,51 @@ class DataScience():
             # Var known
             if var:
                 m = a['mean'] - b['mean']
-                critical_value = stats.norm.ppf(confidence + (1 - confidence) / 2)
+                critical_value = stats.norm.ppf(confidence)
                 standard_error = np.sqrt(var[0] / a['n'] + var[1] / b['n'])
 
             # Var unknown but assumed equal
             elif var_assumed_equal:
                 m = a['mean'] - b['mean']
                 var = ((a['n'] - 1) * a['var'] + (b['n'] - 1) * b['var']) / (a['n'] + b['n'] - 2)
-                critical_value = stats.t.isf((1 - confidence)/2, a['n'] + b['n'] - 2)
+                df = a['n'] + b['n'] - 2
+                
+                critical_value = stats.t.isf(significance, df)
                 standard_error = np.sqrt(var / a['n'] + var / b['n'])
             
             # Var unknown but assumed different
             else:
                 m = a['mean'] - b['mean']
-                
                 df = ((a['var'] / a['n'] + b['var'] / b['n']) ** 2) / ((a['var'] / a['n']) ** 2 / (a['n'] - 1) + (b['var'] / b['n']) ** 2 / (b['n'] - 1))
                 
-                critical_value = stats.t.isf((1 - confidence)/2, df)
+                critical_value = stats.t.isf(significance, df)
                 standard_error = np.sqrt(a['var'] / a['n'] + b['var'] / b['n'])
 
         margin_error = critical_value * standard_error
         low_lim = m - margin_error
         max_lim = m + margin_error
         
-        interval = (low_lim, max_lim)
-        print(interval)
-        print(m, var, standard_error, critical_value)
-        return interval
+        print((low_lim, max_lim))
+        # print(m, var, standard_error, critical_value)
+
+        # If p_Test is required
+        if p_Test != None:
+            Z = abs((m - p_Test) / standard_error)
+
+            # set p if var known and bilateral o unilateral Test
+            if var:
+                p = 1 - stats.norm.cdf(Z)
+            else:
+                p = 1 - stats.t.sf(Z)
+
+            if bilateral:
+                p *= 2
+
+            # Evaluate Hypothesis Test
+            op = lambda p, significance: '<' if p < significance else '>'
+            print(f'{p} {op(p, significance)} {significance}: {p > significance} Hypothesis null')
+
+        return (low_lim, max_lim)
     
     
     # n x 2 Table with variable name and 'freq' grouped by variable name (freq must be in last position)
@@ -305,6 +331,7 @@ class DataScience():
         plt.show()
 
     
+    # n x 1 dataset
     def probplot(self, data):
         '''
         ppplot (Probability-Probability plot)
