@@ -80,6 +80,9 @@ thera = DataScience()
 # Standarize distribution
 # case_HandleTimeHours = thera.standarize_distribution(case_HandleTimeHours)
 
+# Apply Central Limit Theorem
+# case_HandleTimeHours = thera.central_limit(case_HandleTimeHours, n_samples=1000, frac=0.6)
+
 # Confidence Interval. Specify std if known
 # confidence = 0.95
 # thera.confidence_interval(case_HandleTimeHours, confidence, var=None, var_assumed_equal=True)

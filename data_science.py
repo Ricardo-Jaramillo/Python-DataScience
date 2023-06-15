@@ -126,6 +126,22 @@ class DataScience():
         return stats.zscore(data)
 
 
+    # n x 1 dataset
+    def central_limit(self, data, n_samples, frac):
+        new_data = []
+
+        # Make sure data is a DataFrame or pd Series
+        if not (isinstance(data, pd.DataFrame) or isinstance(data, pd.Series)):
+            data = pd.DataFrame(data=data, columns=['values'])
+        
+        # Generate n-sample means
+        for i in range(n_samples):
+            m = round(data.sample(frac=frac).mean(), 3)
+            new_data.append(m)
+        
+        return new_data
+
+
     # n x 1 dataset or list of datasets with a desired confidence level. Must specify var population if known and assumed equal when required
     def confidence_interval(self, data, confidence, var=None, var_assumed_equal=True):
         
@@ -227,7 +243,7 @@ class DataScience():
     # list with values to plot
     def histogram(self, data_histogram, bins, kde=False):
         fig, ax = plt.subplots()
-        sns.histplot(data=data_histogram, x=data_histogram, kde=kde, bins=bins, alpha=0.5)
+        sns.histplot(data=data_histogram, kde=kde, bins=bins, alpha=0.5)
         ax.set_title('Histogram')
         plt.show()
 

@@ -46,3 +46,4 @@ For this project I used a connection to a SQL Database, so the pyodbc library is
 
 ### Pending
 1. Probability distributions
+2. Central Limit Theorem
