@@ -1,5 +1,4 @@
-from data_science import Stats
-from data_science import Regressions
+from Statistics import Stats
 from SQLServer import SQLServer
 import pandas as pd
 
@@ -67,47 +66,44 @@ data_confussion_matrix = pd.DataFrame(data)
 stats = Stats()
 
 # Describe & compare mvsk between distribution and Sample
-# vars = stats.describe(case_CSATProduct['Case_CSAT'], sample=True, standarize=False)
-# print(vars)
+vars = stats.describe(case_CSATProduct['Case_CSAT'], sample=True, standarize=False)
+print(vars)
 
 # Covariance and Correlation coefficient Matrix
-# stats.cov_corr(case_metrics)
+stats.cov_corr(case_metrics)
 
 # Plot Confussion matrix
-# stats.confussion_matrix(data_confussion_matrix, plot=True)
+stats.confussion_matrix(data_confussion_matrix, plot=True)
 
 # Standarize distribution
-# a = stats.standarize_distribution(case_HandleTimeHours)
-# print(a)
+a = stats.standarize_distribution(case_HandleTimeHours)
+print(a)
 
 # Apply Central Limit Theorem
-# a = stats.central_limit(case_HandleTimeHours, n_samples=1000, frac=0.6)
-# print(a)
+a = stats.central_limit(case_HandleTimeHours, n_samples=1000, frac=0.6)
+print(a)
 
 # Confidence Interval. Specify var if known. Specify Hypothesis Test if needed
-# a = case_HandleTimeHours
-# confidence = 0.90
-# stats.confidence_interval(a, confidence, bilateral=False, var=None, var_assumed_equal=True, p_Test=None)
+a = case_HandleTimeHours
+confidence = 0.90
+stats.confidence_interval(a, confidence, bilateral=False, var=None, var_assumed_equal=True, p_Test=None)
 
 # Plot Paretos chart
-# stats.pareto(case_DispositionReason, plot=True, xlim=False)
+stats.pareto(case_DispositionReason, plot=True, xlim=False)
 
 # Plot Histogram
-# stats.histogram(case_HandleTimeHours, bins=10, kde=True)
+stats.histogram(case_HandleTimeHours, bins=10, kde=True)
 
 # Plot Bars charts
-# stats.bars(case_metrics, type='simple', stacked=False, rotation=0, table=False)
-# stats.bars(case_metrics, type='simple', stacked=False, rotation=0, table=True)
-# stats.bars(case_metrics, type='simple', stacked=True, rotation=0, table=False)
-# stats.bars(case_metrics, type='simple', stacked=True, rotation=0, table=True)
-# stats.bars(case_metrics, type='horizontal', stacked=False, rotation=0, table=False)
-# stats.bars(case_metrics, type='horizontal', stacked=True, rotation=0, table=False)
+stats.bars(case_metrics, type='simple', stacked=False, rotation=0, table=False)
+stats.bars(case_metrics, type='simple', stacked=False, rotation=0, table=True)
+stats.bars(case_metrics, type='simple', stacked=True, rotation=0, table=False)
+stats.bars(case_metrics, type='simple', stacked=True, rotation=0, table=True)
+stats.bars(case_metrics, type='horizontal', stacked=False, rotation=0, table=False)
+stats.bars(case_metrics, type='horizontal', stacked=True, rotation=0, table=False)
 
 # Plot probplot
-# stats.probplot(case_HandleTimeHours)
+stats.probplot(case_HandleTimeHours)
 
 # Plot scatter
-# stats.scatter(case_scatter, colors=False, factor=10)
-
-# Init Regressions class
-reg = Regressions()
+stats.scatter(case_scatter, colors=False, factor=10)

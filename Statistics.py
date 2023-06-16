@@ -362,7 +362,3 @@ class Stats():
         plt.scatter(data[data.columns[0]], data[data.columns[1]], s=area, c=colors, alpha=0.5)
         plt.show()
     
-
-class Regressions():
-    def __init__(self) -> None:
-        pass
