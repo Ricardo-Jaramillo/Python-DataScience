@@ -1,5 +1,5 @@
+from numpy.random import default_rng
 import matplotlib.pyplot as plt
-from SQLServer import SQLServer
 from matplotlib import style
 from scipy import stats
 import seaborn as sns
@@ -10,12 +10,216 @@ import numpy as np
 # Init matplotlib style
 style.use('ggplot')
 
+# Setting a seed for random numbers
+# print(SeedSequence().entropy)
+rng = default_rng(122708692400277160069775657973126599887)
 
-class DataScience():
+
+class Stats():
     def __init__(self):
         # self.data = data
         pass
 
+    
+    # n x 1 dataset
+    def describe(self, data, sample=True, standarize=False):
+        '''
+        Empirical Rule for std -> 68-95-99.7
+
+        # populate distribution with sample params
+        data = stats.t.rvs(df=df, size=1000, scale=scale, loc=loc) #, random_state=rng)
+
+        # Manually calculated
+        skew = stats.skew(data)
+        kurtosis = stats.kurtosis(data)
+        var = np.var(data, ddof=ddof)
+        var_coeff = scale / loc
+        '''
+
+        if sample:
+            ddof = 1
+        else:
+            ddof = 0
+
+        if standarize:
+            data = self.standarize_distribution(data)
+        
+        # Set distribution variables
+        m, v, s, k = stats.t.stats(df=len(data) - 1, scale=np.std(data, ddof=ddof), loc=np.mean(data), moments='mvsk')
+        std = v / (len(data) - ddof)
+        vc = std / m
+
+        # Set sample variables
+        sn, (smin, smax), sm, sv, ss, sk = stats.describe(data, ddof=ddof)
+        sstd = np.sqrt(sv)
+        svc = sstd / sm
+
+        # Save in a DataFrame
+        dic = {
+            'distribution': {
+                'n': sn,
+                'mean': m,
+                'var': v,
+                'skew': s,
+                'kurtosis': k,
+                'std': std,
+                'var coefficient': vc
+            },
+            'sample': {
+                'n': sn,
+                'mean': sm,
+                'var': sv,
+                'skew': ss,
+                'kurtosis': sk,
+                'std': sstd,
+                'var coefficient': svc
+            }
+        }
+
+        df_desc = pd.DataFrame(dic)
+
+        return df_desc
+    
+
+    # n x m DataFrame. Return an n x m cov_matrix and corr_coeff matrix.
+    def cov_corr(self, data):
+        
+        cov_matrix = np.cov(data)
+        corr_coeff_matrix = np.corrcoef(data)
+        
+        # Covariance Matrix
+        sns.heatmap(cov_matrix, annot=True, fmt='g', xticklabels=data.index.to_list(), yticklabels=data.index.to_list())
+        plt.title('Covariance Matrix')
+        plt.tight_layout()
+        plt.show()
+
+        # Correlation Coefficient Matrix
+        sns.heatmap(corr_coeff_matrix, annot=True, fmt='g', xticklabels=data.index.to_list(), yticklabels=data.index.to_list())
+        plt.title('Correlation coefficient Matrix')
+        plt.tight_layout()
+        plt.show()
+
+        return (cov_matrix, corr_coeff_matrix)
+    
+
+    # n x 2 dataset. y_actual, y_predicted order
+    def confussion_matrix(self, data, plot=True):
+        '''
+            Working with non numeric data
+            df['y_actual'] = df['y_actual'].map({'Yes': 1, 'No': 0})
+            df['y_predicted'] = df['y_predicted'].map({'Yes': 1, 'No': 0})
+        '''
+        confusion_matrix = pd.crosstab(data[data.columns[0]], data[data.columns[1]], rownames=['Actual'], colnames=['Predicted'], margins=True)
+        
+        if plot:
+            sns.heatmap(confusion_matrix, annot=True)
+            plt.show()
+
+        print(confusion_matrix)
+
+        return confusion_matrix
+    
+
+    # n x 1 dataset
+    def standarize_distribution(self, data):
+        return stats.zscore(data)
+
+
+    # n x 1 dataset
+    def central_limit(self, data, n_samples, frac):
+        new_data = []
+
+        # Make sure data is a DataFrame or pd Series
+        if not (isinstance(data, pd.DataFrame) or isinstance(data, pd.Series)):
+            data = pd.DataFrame(data=data, columns=['values'])
+        
+        # Generate n-sample means
+        for i in range(n_samples):
+            m = round(data.sample(frac=frac).mean(), 3)
+            new_data.append(m)
+        
+        return new_data
+
+
+    # n x 1 dataset or list of datasets with a desired confidence level. Must specify var population if known and assumed equal when required
+    def confidence_interval(self, data, confidence, bilateral=True, var=None, var_assumed_equal=True, p_Test=None):
+        
+        # set confidence according to wheather it is a unilateral or bilateral test
+        significance = 1 - confidence
+        
+        if bilateral:
+            significance = significance / 2
+            confidence = confidence + significance
+
+        # If data contains a unique dataset. (Confidence Interval of a DataSet or Dependent samples)
+        if not any(isinstance(el, list) for el in data):
+
+            if var:
+                critical_value = stats.norm.ppf(confidence)
+            else:
+                df = len(data)-1
+                critical_value = stats.t.isf(significance, df)
+                var = np.var(data, ddof=1)
+                # With stats function
+                # interval = stats.t.interval(confidence=confidence, df=len(data)-1, loc=np.mean(data), scale=stats.sem(data))
+            
+            m = np.mean(data)
+            standard_error = np.sqrt(var / len(data))
+        
+        # If data is a list of datasets. (Independent samples)
+        else:
+            a = self.describe(data[0])['sample'].loc[['n', 'mean', 'var']]
+            b = self.describe(data[1])['sample'].loc[['n', 'mean', 'var']]
+            
+            # Var known
+            if var:
+                m = a['mean'] - b['mean']
+                critical_value = stats.norm.ppf(confidence)
+                standard_error = np.sqrt(var[0] / a['n'] + var[1] / b['n'])
+
+            # Var unknown but assumed equal
+            elif var_assumed_equal:
+                m = a['mean'] - b['mean']
+                var = ((a['n'] - 1) * a['var'] + (b['n'] - 1) * b['var']) / (a['n'] + b['n'] - 2)
+                df = a['n'] + b['n'] - 2
+                
+                critical_value = stats.t.isf(significance, df)
+                standard_error = np.sqrt(var / a['n'] + var / b['n'])
+            
+            # Var unknown but assumed different
+            else:
+                m = a['mean'] - b['mean']
+                df = ((a['var'] / a['n'] + b['var'] / b['n']) ** 2) / ((a['var'] / a['n']) ** 2 / (a['n'] - 1) + (b['var'] / b['n']) ** 2 / (b['n'] - 1))
+                
+                critical_value = stats.t.isf(significance, df)
+                standard_error = np.sqrt(a['var'] / a['n'] + b['var'] / b['n'])
+
+        margin_error = critical_value * standard_error
+        low_lim = m - margin_error
+        max_lim = m + margin_error
+        
+        print((low_lim, max_lim))
+        # print(m, var, standard_error, critical_value)
+
+        # If p_Test is required
+        if p_Test != None:
+            Z = abs((m - p_Test) / standard_error)
+
+            # set p if var known and bilateral o unilateral Test
+            if var:
+                p = 1 - stats.norm.cdf(Z)
+            else:
+                p = 1 - stats.t.sf(Z)
+
+            if bilateral:
+                p *= 2
+
+            # Evaluate Hypothesis Test
+            op = lambda p, significance: '<' if p < significance else '>'
+            print(f'{p} {op(p, significance)} {significance}: {p > significance} Hypothesis null')
+
+        return (low_lim, max_lim)
+    
     
     # n x 2 Table with variable name and 'freq' grouped by variable name (freq must be in last position)
     def pareto(self, data, plot=False, xlim=False):
@@ -63,15 +267,8 @@ class DataScience():
     
     # list with values to plot
     def histogram(self, data_histogram, bins, kde=False):
-        # Histogram type 1
-        # plt.hist(data_histogram, bins=bins, color = "blue", rwidth=0.9, alpha=0.5)
-        # plt.title("Histogram")
-        # plt.xlabel("Value")
-        # plt.ylabel("Frequency")
-
-        # Histogram type 2
         fig, ax = plt.subplots()
-        sns.histplot(data=data_histogram, x=data_histogram, kde=kde, bins=bins, alpha=0.5)
+        sns.histplot(data=data_histogram, kde=kde, bins=bins, alpha=0.5)
         ax.set_title('Histogram')
         plt.show()
 
@@ -134,15 +331,6 @@ class DataScience():
 
     
     # n x 1 dataset
-    def skew(self, data):
-        # Print Mean and Std. Deviation. Describe Data
-        print("Mean: %0.3f +/-std %0.3f" % (np.mean(data), np.std(data)))
-        print('Median: %0.3f' % np.median(data))
-
-        # Skew
-        print('\nSkewness for data : ', stats.skew(data))
-    
-
     def probplot(self, data):
         '''
         ppplot (Probability-Probability plot)
@@ -175,14 +363,6 @@ class DataScience():
         plt.show()
     
 
-    # n x 1 column dataset
-    def var(self, data):
-        var = np.var(data)
-        std = np.std(data)
-        var_coeff = stats.variation(data)
-
-        print(f'var: {var}')
-        print(f'std: {std}')
-        print(f'var_coeff: {var_coeff}')
-
-        return (var, std, var_coeff)
+class Regressions():
+    def __init__(self) -> None:
+        pass
