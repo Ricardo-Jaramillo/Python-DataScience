@@ -40,12 +40,22 @@ case = Therabody.select(query)
 # case = pd.read_csv('case.csv')
 
 data_reg_1 = pd.read_csv('1.01. Simple linear regression.csv')
+data_reg_2 = pd.read_csv('1.02. Multiple linear regression.csv')
 
 # Set DataFrames
+data_reg_1 = data_reg_1[[data_reg_1.columns[1], data_reg_1.columns[0]]]
+data_reg_2 = data_reg_2[[data_reg_2.columns[1], data_reg_2.columns[0], data_reg_2.columns[2]]]
 
 # Init Stats class
 reg = Regressions()
 
+# Transform variables with the log function
+# data_reg_1_log = reg.transform_log(data_reg_1, ['SAT'])
+# print(data_reg_1, data_reg_1_log)
+
 # Plot a simple linear regression
 # alpha = 0.05
-# reg.simple_linear_regression(data_reg_1, alpha)
+# reg.linear_regression(data_reg_1, alpha)
+
+# Multiple linear regression
+# reg.linear_regression(data_reg_2)

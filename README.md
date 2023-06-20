@@ -36,11 +36,16 @@ For this project I used a connection to a SQL Database, so the pyodbc library is
 14. Hypothesis Test. (Applied for each type of Confidence Interval)
 
 ## Regressions Class
-1. Simple linear Regression (StatsModels)
-2. Multiple linear Regression (StatsModels)
+1. Simple linear Regression (OLS)
+2. Multiple linear Regression (OLS)
 3. Dummy variables
 4. Logistic Regression
 
 ## Pending
 1. Probability distributions
 2. Plot Confidence Intervals in normal distributions and probplots
+3. Simple linear Regression
+    1. Other solution methods
+    2. Log transformation variables as elasticity (economics)
+    3. Durbin-Watson to detect no autocorrelation
+    4. Other regression models to time-series or when the error terms (No Autocorrelation) are correlated
