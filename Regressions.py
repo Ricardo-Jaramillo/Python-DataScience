@@ -22,15 +22,19 @@ class Regressions():
     def __init__(self) -> None:
         pass
 
-    
-    # n x m DataFrame
-    def transform_log(self, data, columns):
-        # Apply log function to the specified columns
-        for col in columns:
-            data[col] = np.log(data[col])
-        
-        return data
 
+    # n x m DataFrame. Specify the columns to transform
+    def transform(self, type, data, columns):
+        # Apply a transformation for each column
+        for column in columns:
+            # Apply log function to the specified columns
+            if type == 'log':
+                data[column] = np.log(data[column])
+            # Map data 
+            if type == 'map':
+                data[column] = data[column].map({'Yes': 1, 'No': 0})
+
+        return data
     
     # n x 2 DataFrame with first column y
     def linear_regression(self, data: pd.DataFrame, alpha=None):
