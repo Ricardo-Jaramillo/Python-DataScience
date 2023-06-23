@@ -66,3 +66,8 @@ reg = Regressions()
 # reg.linear_regression(dataset=data_reg_2, y_column='GPA', x_columns=['SAT'], dummy_columns=['Rand'], alpha=alpha)
 # reg.linear_regression(dataset=data_reg_3, y_column='GPA', x_columns=['SAT', 'Attendance'], dummy_columns=[], alpha=0)
 # reg.linear_regression(dataset=data_reg_3, y_column='GPA', x_columns=['SAT'], dummy_columns=['Attendance'], alpha=alpha)
+
+# Make predictions with a Linear Regression
+# new_data = pd.DataFrame({'SAT': [1700, 1670], 'Attendance': ['No', 'Yes']})
+# ols_results = reg.linear_regression(dataset=data_reg_3, y_column='GPA', x_columns=['SAT', 'Attendance'], dummy_columns=[], alpha=0)
+# reg.predict(ols_results, new_data)

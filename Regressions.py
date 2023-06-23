@@ -157,3 +157,21 @@ class Regressions():
         if len(x_columns) == 1:
             self.__plot_simple_regression(dataset, results, y_column, x_columns[0], x_columns_dummies, dummy_columns, alpha)
         
+        return results
+
+
+    # Results from Linear Regression and dataset to be predicted
+    def predict(self, results: list, dataset: pd.DataFrame):
+        predictions = []
+
+        # Predict for each model (Simple and with Dummies if specified)
+        for result in results:
+            type, model = result
+            
+            prediction = model.predict(dataset)
+            print(f'{type} model:')
+            print(prediction)
+
+            predictions.append(prediction)
+        
+        return predictions
