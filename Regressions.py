@@ -169,8 +169,9 @@ class Regressions():
             type, model = result
             
             prediction = model.predict(dataset)
+            dataset = dataset.join(pd.DataFrame({'Predictions': prediction}))
             print(f'{type} model:')
-            print(prediction)
+            print(dataset)
 
             predictions.append(prediction)
         
