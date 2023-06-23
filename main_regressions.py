@@ -57,11 +57,12 @@ reg = Regressions()
 # print(data_reg_3, data_reg_3_map)
 
 # Plot a simple linear regression
-alpha = 0.05
+# alpha = 0.05
 # reg.linear_regression(dataset=data_reg_1, y_column='GPA', x_columns=['SAT'], alpha=alpha, dummy_columns=[])
 
 # Multiple linear regression
+# alpha = 0
 # reg.linear_regression(dataset=data_reg_2, y_column='GPA', x_columns=['SAT', 'Rand'], dummy_columns=[], alpha=0)
 # reg.linear_regression(dataset=data_reg_2, y_column='GPA', x_columns=['SAT'], dummy_columns=['Rand'], alpha=alpha)
 # reg.linear_regression(dataset=data_reg_3, y_column='GPA', x_columns=['SAT', 'Attendance'], dummy_columns=[], alpha=0)
-reg.linear_regression(dataset=data_reg_3, y_column='GPA', x_columns=['SAT'], dummy_columns=['Attendance'], alpha=alpha)
+# reg.linear_regression(dataset=data_reg_3, y_column='GPA', x_columns=['SAT'], dummy_columns=['Attendance'], alpha=alpha)

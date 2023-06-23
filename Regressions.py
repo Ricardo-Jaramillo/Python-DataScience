@@ -91,6 +91,7 @@ class Regressions():
                     # Plot each dummy Regression Line
                     fig = ax.plot(x, yhat_dummies, label=column)
             
+        plt.title('Simple linear Regression')
         plt.legend(loc='best')
         plt.xlabel(x_column)
         plt.ylabel(y_column)
