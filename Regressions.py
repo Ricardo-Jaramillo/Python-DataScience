@@ -138,19 +138,20 @@ class Regressions():
         # Map dummy columns
         dataset[dummy_columns] = self.transform('map', aux, dummy_columns)
 
+        # Formulate the original model
+        reg_exp = f'{y_column} ~ {" + ".join(x_columns)}' # 'price ~ body_style_hardtop + body_style_hatchback + body_style_sedan + body_style_wagon'
+        ols_model_results = smf.ols(formula=reg_exp, data=dataset).fit()
+        results.append(('Original', ols_model_results))
+        
         # Formulate the model with dummies
         if dummy_columns:
             reg_exp = f'{y_column} ~ {" + ".join(x_columns + x_columns_dummies)}' # 'price ~ body_style_hardtop + body_style_hatchback + body_style_sedan + body_style_wagon'
             ols_model_results = smf.ols(formula=reg_exp, data=dataset).fit()
             results.append(('Dummy', ols_model_results))
-        
-        # Formulate the original model
-        reg_exp = f'{y_column} ~ {" + ".join(x_columns)}' # 'price ~ body_style_hardtop + body_style_hatchback + body_style_sedan + body_style_wagon'
-        ols_model_results = smf.ols(formula=reg_exp, data=dataset).fit()
-        results.append(('Original', ols_model_results))
 
         # Get results
-        for _, result in results:
+        for type, result in results:
+            print(f'{type} model:')
             print(result.summary())
 
         # Plot if simple linear regression
@@ -160,13 +161,14 @@ class Regressions():
         return results
 
 
-    # Results from Linear Regression and dataset to be predicted
-    def predict(self, results: list, dataset: pd.DataFrame):
+    # Results from Linear Regression and dataset to be predicted with original model dataset at first
+    def predict(self, results: list, datasets: list):
         predictions = []
 
         # Predict for each model (Simple and with Dummies if specified)
-        for result in results:
-            type, model = result
+        for i in range(len(results)):
+            type, model = results[i]
+            dataset = datasets[i]
             
             prediction = model.predict(dataset)
             dataset = dataset.join(pd.DataFrame({'Predictions': prediction}))

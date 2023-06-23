@@ -68,6 +68,19 @@ reg = Regressions()
 # reg.linear_regression(dataset=data_reg_3, y_column='GPA', x_columns=['SAT'], dummy_columns=['Attendance'], alpha=alpha)
 
 # Make predictions with a Linear Regression
-# new_data = pd.DataFrame({'SAT': [1700, 1670], 'Attendance': ['No', 'Yes']})
+new_data_1 = pd.DataFrame({'SAT': [1700, 1670]})
+new_data_2 = pd.DataFrame({'SAT': [1700, 1670], 'Attendance': ['No', 'Yes']})
+new_data_3 = pd.DataFrame({'SAT': [1700, 1670], 'Attendance_No': [0, 1], 'Attendance_Yes': [1, 0]})
+new_data = [new_data_2, new_data_3]
+
+# To check
+# ols_results = reg.linear_regression(dataset=data_reg_3, y_column='GPA', x_columns=['SAT'], dummy_columns=[], alpha=0)
+# reg.predict(ols_results, [new_data_1])
+
+# Correct
 # ols_results = reg.linear_regression(dataset=data_reg_3, y_column='GPA', x_columns=['SAT', 'Attendance'], dummy_columns=[], alpha=0)
+# reg.predict(ols_results, [new_data_2])
+
+# To check
+# ols_results = reg.linear_regression(dataset=data_reg_3, y_column='GPA', x_columns=['SAT'], dummy_columns=['Attendance'], alpha=0)
 # reg.predict(ols_results, new_data)
