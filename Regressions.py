@@ -46,7 +46,7 @@ class Regressions():
     
 
     # Plot a simple Regression with dummy variables if specified
-    def __plot_simple_regression(self, dataset, model_results, y_column, x_column, x_column_dummies, dummy_columns, alpha):
+    def __plot_simple_linear_regression(self, dataset, model_results, y_column, x_column, x_column_dummies, dummy_columns, alpha):
         # Set scatter colors if dummies
         if dummy_columns:
             c = dataset[dummy_columns[0]]
@@ -155,7 +155,7 @@ class Regressions():
 
         # Plot if simple linear regression
         if len(x_columns) == 1:
-            self.__plot_simple_regression(dataset, results, y_column, x_columns[0], x_columns_dummies, dummy_columns, alpha)
+            self.__plot_simple_linear_regression(dataset, results, y_column, x_columns[0], x_columns_dummies, dummy_columns, alpha)
         
         return results
 
