@@ -42,8 +42,12 @@ case = Therabody.select(query)
 data_reg_1 = pd.read_csv('1.01. Simple linear regression.csv')
 data_reg_2 = pd.read_csv('1.02. Multiple linear regression.csv')
 data_reg_3 = pd.read_csv('1.03. Dummies.csv')
+data_reg_4 = pd.read_csv('2.01. Admittance.csv')
 
 # Set DataFrames
+data_reg_4['Admitted'] = data_reg_4['Admitted'].map({'Yes': 1, 'No': 0})
+data_reg_3['Attendance'] = data_reg_3['Attendance'].map({'Yes': 1, 'No': 0})
+
 
 # Init Stats class
 reg = Regressions()
@@ -57,21 +61,23 @@ reg = Regressions()
 # print(data_reg_3, data_reg_3_map)
 
 # Plot a simple linear regression
-# alpha = 0.05
+alpha = 0.05
 # reg.linear_regression(dataset=data_reg_1, y_column='GPA', x_columns=['SAT'], alpha=alpha, dummy_columns=[])
+reg.regression_model(type='linear', dataset=data_reg_1, y_column='GPA', x_columns=['SAT'], alpha=alpha, dummy_column=None)
 
 # Multiple linear regression
 # alpha = 0
 # reg.linear_regression(dataset=data_reg_2, y_column='GPA', x_columns=['SAT', 'Rand'], dummy_columns=[], alpha=0)
 # reg.linear_regression(dataset=data_reg_2, y_column='GPA', x_columns=['SAT'], dummy_columns=['Rand'], alpha=alpha)
+# reg.regression_model(type='linear', dataset=data_reg_2, y_column='GPA', x_columns=['SAT', 'Rand'], alpha=alpha, dummy_column='Rand')
 # reg.linear_regression(dataset=data_reg_3, y_column='GPA', x_columns=['SAT', 'Attendance'], dummy_columns=[], alpha=0)
 # reg.linear_regression(dataset=data_reg_3, y_column='GPA', x_columns=['SAT'], dummy_columns=['Attendance'], alpha=alpha)
-
+reg.regression_model(type='linear', dataset=data_reg_3, y_column='GPA', x_columns=['SAT', 'Attendance'], alpha=alpha, dummy_column='Attendance')
 # Make predictions with a Linear Regression
-new_data_1 = pd.DataFrame({'SAT': [1700, 1670]})
-new_data_2 = pd.DataFrame({'SAT': [1700, 1670], 'Attendance': ['No', 'Yes']})
-new_data_3 = pd.DataFrame({'SAT': [1700, 1670], 'Attendance_No': [0, 1], 'Attendance_Yes': [1, 0]})
-new_data = [new_data_2, new_data_3]
+# new_data_1 = pd.DataFrame({'SAT': [1700, 1670]})
+# new_data_2 = pd.DataFrame({'SAT': [1700, 1670], 'Attendance': ['No', 'Yes']})
+# new_data_3 = pd.DataFrame({'SAT': [1700, 1670], 'Attendance_No': [0, 1], 'Attendance_Yes': [1, 0]})
+# new_data = [new_data_2, new_data_3]
 
 # To check
 # ols_results = reg.linear_regression(dataset=data_reg_3, y_column='GPA', x_columns=['SAT'], dummy_columns=[], alpha=0)
@@ -84,3 +90,6 @@ new_data = [new_data_2, new_data_3]
 # To check
 # ols_results = reg.linear_regression(dataset=data_reg_3, y_column='GPA', x_columns=['SAT'], dummy_columns=['Attendance'], alpha=0)
 # reg.predict(ols_results, new_data)
+
+# Logistic Regression
+reg.regression_model(type='logistic', dataset=data_reg_4, y_column='Admitted', x_columns=['SAT'])

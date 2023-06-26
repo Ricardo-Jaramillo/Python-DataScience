@@ -98,6 +98,73 @@ class Regressions():
         plt.show()
         
 
+    def __plot_linear_regression(self, dataset: pd.DataFrame, y_column: str, x_column: str, model_results: smf, alpha: float=0, dummy_column: str=None):
+        # Get model params and variables data
+        params = model_results.params
+        y = dataset[y_column]
+        x = dataset[x_column]
+
+        # Init figure and color
+        fig, ax = plt.subplots()
+        ax.set_prop_cycle(color=self.color)
+
+        # Set colors dummy colors
+        if dummy_column:
+            values = dataset[dummy_column].unique()
+            dataset['colors'] = dataset[dummy_column]
+            for value in values:
+                dataset['colors'] = dataset['colors'].replace(value, self.color[value])
+            c = dataset['colors']
+        else:
+            c = self.color[1]
+        
+        # Plot Scatter and Original Regression
+        yhat = params[0] + params[1]*x
+        
+        fig = ax.scatter(x, y, c=c)
+        fig = ax.plot(x, yhat, label='Regression line')
+
+        if alpha:
+            prstd, iv_l, iv_u = wls_prediction_std(model_results, alpha=alpha)
+            fig = ax.plot(x, iv_u, 'r--', label='upper bound')
+            fig = ax.plot(x, iv_l, 'r--', label='lower bound')
+
+        # Plot Dummy variable
+        if dummy_column:
+            for value in dataset[dummy_column].unique():
+                yhat_dummies = params['Intercept'] + params[dummy_column]*value + params[x_column]*x
+                    
+                # Plot each dummy Regression Line
+                fig = ax.plot(x, yhat_dummies, label=value)
+
+        plt.title('Simple linear Regression')
+        plt.legend(loc='best')
+        plt.xlabel(x_column)
+        plt.ylabel(y_column)
+        plt.show()
+
+
+
+    def __plot_logistic_regression(self, dataset: pd.DataFrame, y_column: str, x_column: str, model_results: smf):
+        # Get model params and variables data
+        b0, b1 = model_results.params
+
+        y = dataset[y_column]
+        x = dataset[x_column]
+        x_sort = np.sort(np.array(x))
+        yhat = np.sort(np.array(np.exp(b0 + x*b1) / (1 + np.exp(b0 + x*b1))))
+        
+        fig, ax = plt.subplots()
+        ax.set_prop_cycle(color=self.color)
+        
+        ax.scatter(x, y)
+        
+        plt.xlabel(x_column)
+        plt.ylabel(y_column)
+        plt.plot(x_sort, yhat)
+        plt.show()
+
+
     # n x 2 DataFrame (y, xn-1, xn)
     def linear_regression(self, dataset: pd.DataFrame, y_column: str, x_columns: list, alpha: float=0, dummy_columns: list=[]):
         '''
@@ -178,3 +245,29 @@ class Regressions():
             predictions.append(prediction)
         
         return predictions
+
+
+    def regression_model(self, type: str, dataset: pd.DataFrame, y_column: str, x_columns: list, alpha: float=0, dummy_column: str=None):
+        # Set the model expression
+        reg_exp = f'{y_column} ~ {" + ".join(x_columns)}'
+        
+        # Create the selected model
+        if type == 'linear':
+            model_results = smf.ols(formula=reg_exp, data=dataset).fit()
+            
+            # Plot if alpha is specified
+            if alpha:
+                # Remove dummy from x_columns and plot if remains a unique x_column variable
+                if dummy_column:
+                    x_columns.remove(dummy_column)
+                if len(x_columns) == 1:
+                    self.__plot_linear_regression(dataset, y_column, x_columns[0], model_results, alpha, dummy_column)
+
+        if type == 'logistic':
+            model_results = smf.logit(formula=reg_exp, data=dataset).fit()
+            
+            # Plot if alpha is specified
+            if alpha:
+                self.__plot_logistic_regression(dataset, y_column, x_columns[0], model_results, alpha)
+        
+        print(model_results.summary())
