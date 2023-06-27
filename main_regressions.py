@@ -49,47 +49,36 @@ data_reg_4['Admitted'] = data_reg_4['Admitted'].map({'Yes': 1, 'No': 0})
 data_reg_3['Attendance'] = data_reg_3['Attendance'].map({'Yes': 1, 'No': 0})
 
 
-# Init Stats class
+# Init Regressions class
 reg = Regressions()
 
-# Transform variables
-    # Apply log function
-# data_reg_1_log = reg.transform(type='log', dataset=data_reg_1, columns=['SAT'])
-# print(data_reg_1, data_reg_1_log)
-    # Apply map function
-# data_reg_3_map = reg.transform(type='map', dataset=data_reg_3, columns=['Attendance'])
-# print(data_reg_3, data_reg_3_map)
-
 # Plot a simple linear regression
-alpha = 0.05
-# reg.linear_regression(dataset=data_reg_1, y_column='GPA', x_columns=['SAT'], alpha=alpha, dummy_columns=[])
-reg.regression_model(type='linear', dataset=data_reg_1, y_column='GPA', x_columns=['SAT'], alpha=alpha, dummy_column=None, plot=True)
+# alpha = 0.05
+# reg.regression_model(type='linear', dataset=data_reg_1, y_column='GPA', x_columns=['SAT'], alpha=alpha, dummy_column=None, plot=True)
 
 # Multiple linear regression
-# alpha = 0
-# reg.linear_regression(dataset=data_reg_2, y_column='GPA', x_columns=['SAT', 'Rand'], dummy_columns=[], alpha=0)
-# reg.linear_regression(dataset=data_reg_2, y_column='GPA', x_columns=['SAT'], dummy_columns=['Rand'], alpha=alpha)
-reg.regression_model(type='linear', dataset=data_reg_2, y_column='GPA', x_columns=['SAT', 'Rand'], alpha=alpha, dummy_column='Rand')
-# reg.linear_regression(dataset=data_reg_3, y_column='GPA', x_columns=['SAT', 'Attendance'], dummy_columns=[], alpha=0)
-# reg.linear_regression(dataset=data_reg_3, y_column='GPA', x_columns=['SAT'], dummy_columns=['Attendance'], alpha=alpha)
-reg.regression_model(type='linear', dataset=data_reg_3, y_column='GPA', x_columns=['SAT', 'Attendance'], alpha=alpha, dummy_column='Attendance', plot=True)
+# alpha = 0.0
+# reg.regression_model(type='linear', dataset=data_reg_2, y_column='GPA', x_columns=['SAT', 'Rand'], alpha=alpha, dummy_column=None, plot=True)
+# reg.regression_model(type='linear', dataset=data_reg_2, y_column='GPA', x_columns=['SAT', 'Rand'], alpha=alpha, dummy_column='Rand', plot=True)
+# reg.regression_model(type='linear', dataset=data_reg_3, y_column='GPA', x_columns=['SAT', 'Attendance'], alpha=alpha, dummy_column=None, plot=True)
+# reg.regression_model(type='linear', dataset=data_reg_3, y_column='GPA', x_columns=['SAT', 'Attendance'], alpha=alpha, dummy_column='Attendance', plot=True)
+
 # Make predictions with a Linear Regression
 # new_data_1 = pd.DataFrame({'SAT': [1700, 1670]})
-# new_data_2 = pd.DataFrame({'SAT': [1700, 1670], 'Attendance': ['No', 'Yes']})
-# new_data_3 = pd.DataFrame({'SAT': [1700, 1670], 'Attendance_No': [0, 1], 'Attendance_Yes': [1, 0]})
-# new_data = [new_data_2, new_data_3]
+# new_data_2 = pd.DataFrame({'SAT': [1700, 1670], 'Attendance': [0, 1]})
 
 # To check
-# ols_results = reg.linear_regression(dataset=data_reg_3, y_column='GPA', x_columns=['SAT'], dummy_columns=[], alpha=0)
-# reg.predict(ols_results, [new_data_1])
+# ols_results = reg.regression_model(type='linear', dataset=data_reg_1, y_column='GPA', x_columns=['SAT'], alpha=0, dummy_column=None, plot=True)
+# reg.predict(ols_results['Original'], new_data_1)
 
 # Correct
-# ols_results = reg.linear_regression(dataset=data_reg_3, y_column='GPA', x_columns=['SAT', 'Attendance'], dummy_columns=[], alpha=0)
-# reg.predict(ols_results, [new_data_2])
+# ols_results = reg.regression_model(type='linear', dataset=data_reg_3, y_column='GPA', x_columns=['SAT', 'Attendance'], alpha=0, dummy_column=None, plot=True)
+# reg.predict(ols_results['Original'], new_data_2)
 
 # To check
-# ols_results = reg.linear_regression(dataset=data_reg_3, y_column='GPA', x_columns=['SAT'], dummy_columns=['Attendance'], alpha=0)
-# reg.predict(ols_results, new_data)
+# ols_results = reg.regression_model(type='linear', dataset=data_reg_3, y_column='GPA', x_columns=['SAT', 'Attendance'], alpha=0, dummy_column='Attendance', plot=True)
+# reg.predict(ols_results['Original'], new_data_2)
+# reg.predict(ols_results['Dummy'], new_data_2)
 
 # Logistic Regression
-reg.regression_model(type='logistic', dataset=data_reg_4, y_column='Admitted', x_columns=['SAT'], plot=True)
+# reg.regression_model(type='logistic', dataset=data_reg_4, y_column='Admitted', x_columns=['SAT'], plot=True)
