@@ -151,6 +151,15 @@ class Regressions():
             Column name of the independent variable
         model_results:
             Logit fitted model results from statsmodels.formula.api
+
+        Important variables in the Summary Regression model
+        MLE Method -> Maximum Likelihood Estimation
+        Log-Likelihood -> Estimation variables of the model. More positive is better
+        LLR p-value -> Determines the significance of the model compared to a model using a unique constant variable. Same as the P value Test for a variable significance in a Linear Model
+        Pseudo-R-squared -> R-squared of MacFadden. Similar to R-squared in Linear Model. A good value should remain between 0.2 - 0.4. Usefull to compare VARIATIONS of the SAME model
+
+        Logit Model:
+            log(probabilities / 1-probabilities) = linear equation
         '''
 
         # Get model params and variables data
@@ -193,10 +202,10 @@ class Regressions():
 
         # Set the model expression
         reg_exp = f'{y_column} ~ {" + ".join(x_columns)}'
-        
+        models = {}
+
         # Create the selected model
         if type == 'linear':
-            models = {}
             model_results = smf.ols(formula=reg_exp, data=dataset).fit()
             print(model_results.summary())
             
@@ -220,9 +229,34 @@ class Regressions():
             model_results = smf.logit(formula=reg_exp, data=dataset).fit()
             print(model_results.summary())
 
-            # Plot if alpha is specified
-            if plot:
+            # If Plot
+            if plot and len(x_columns) == 1:
                 self.__plot_logistic_regression(dataset, y_column, x_columns[0], model_results)
+                
+            '''
+            Analyze how the variable difference increment the odds
+            %diff = exp(b*x_diff) * 100
+
+            index -> Value increment of the independent variable
+            Odds increment -> % of Increment on the odds
+            '''
+
+            # Define the list of difference values to use
+            diff_lis = np.array([1, 10, 100])
+            df_odds = pd.DataFrame(index=diff_lis)
+            
+            # Get for each variable the %odds increment of the selected increment values
+            for i in range(1, len(model_results.params.index)):
+                column = model_results.params.index[i] + '[%]'
+                b = model_results.params[i]
+
+                data = np.round(np.exp(b * diff_lis) * 100 - 100, 2).astype(str)
+                df_odds = df_odds.join(pd.DataFrame(data=data, index=diff_lis, columns=[column]))
+            
+            print('\n% Increase over the Odds of a variable according to an increase over the value of the variable')
+            print(df_odds)
+            
+            models['Original'] = model_results
 
         return models
 

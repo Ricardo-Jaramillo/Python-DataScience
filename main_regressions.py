@@ -43,11 +43,13 @@ data_reg_1 = pd.read_csv('1.01. Simple linear regression.csv')
 data_reg_2 = pd.read_csv('1.02. Multiple linear regression.csv')
 data_reg_3 = pd.read_csv('1.03. Dummies.csv')
 data_reg_4 = pd.read_csv('2.01. Admittance.csv')
+data_reg_5 = pd.read_csv('2.02. Binary predictors.csv')
 
 # Set DataFrames
-data_reg_4['Admitted'] = data_reg_4['Admitted'].map({'Yes': 1, 'No': 0})
 data_reg_3['Attendance'] = data_reg_3['Attendance'].map({'Yes': 1, 'No': 0})
-
+data_reg_4['Admitted'] = data_reg_4['Admitted'].map({'Yes': 1, 'No': 0})
+data_reg_5['Admitted'] = data_reg_5['Admitted'].map({'Yes': 1, 'No': 0})
+data_reg_5['Gender'] = data_reg_5['Gender'].map({'Female': 1, 'Male': 0})
 
 # Init Regressions class
 reg = Regressions()
@@ -81,4 +83,5 @@ reg = Regressions()
 # reg.predict(ols_results['Dummy'], new_data_2)
 
 # Logistic Regression
-# reg.regression_model(type='logistic', dataset=data_reg_4, y_column='Admitted', x_columns=['SAT'], plot=True)
+# reg.regression_model(type='logistic', dataset=data_reg_4, y_column='Admitted', x_columns=['SAT'], plot=False)
+reg.regression_model(type='logistic', dataset=data_reg_5, y_column='Admitted', x_columns=['SAT', 'Gender'], plot=False)
