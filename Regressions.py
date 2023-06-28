@@ -1,4 +1,5 @@
 from statsmodels.sandbox.regression.predstd import wls_prediction_std
+from Statistics import Stats
 from numpy.random import default_rng
 import matplotlib.pyplot as plt
 import statsmodels.formula.api as smf
@@ -181,6 +182,18 @@ class Regressions():
         plt.show()
 
 
+    def __get_accuracy_model(self, y_actual, y_predicted, plot=False):
+        # Init Stats to get the confussion_matrix method
+        stats = Stats()
+        
+        # Get the accuracy of the Regression model given the predicted and actual values 
+        cm = stats.confussion_matrix(y_actual, y_predicted, plot)
+        confussion_matrix = pd.DataFrame(cm, columns=['Predicted 0','Predicted 1'], index = ['Actual 0', 'Actual 1'])
+        accuracy_test = round((cm[0,0] + cm[1,1]) / cm.sum() * 100, 2)
+        
+        return accuracy_test, confussion_matrix
+
+
     def regression_model(self, type: str, dataset: pd.DataFrame, y_column: str, x_columns: list, alpha: float=0, dummy_column: str=None, plot: bool=True):
         '''
         Main method to create the selected Regression model
@@ -226,12 +239,17 @@ class Regressions():
                 self.__plot_linear_regression(dataset, y_column, x_columns[0], models, alpha, dummy_column)
 
         if type == 'logistic':
-            model_results = smf.logit(formula=reg_exp, data=dataset).fit()
+            # Sample the data into Train and Test
+            dataset_train = dataset.sample(frac=0.9, random_state=rng)
+            dataset_test = dataset.drop(dataset_train.index)
+
+            # Create model
+            model_results = smf.logit(formula=reg_exp, data=dataset_train).fit()
             print(model_results.summary())
 
             # If Plot
             if plot and len(x_columns) == 1:
-                self.__plot_logistic_regression(dataset, y_column, x_columns[0], model_results)
+                self.__plot_logistic_regression(dataset_train, y_column, x_columns[0], model_results)
                 
             '''
             Analyze how the variable difference increment the odds
@@ -256,17 +274,27 @@ class Regressions():
             print('\n% Increase over the Odds of a variable according to an increase over the value of the variable')
             print(df_odds)
 
-            # Get the accuracy of the model
-            confussion_matrix = pd.DataFrame(model_results.pred_table(), columns=['Predicted 0','Predicted 1'], index = ['Actual 0', 'Actual 1'])
-            cm = np.array(confussion_matrix)
-            accuracy_train = round((cm[0,0] + cm[1,1]) / cm.sum() * 100, 2)
-            
-            print('\nAccuracy of the model:', accuracy_train)
-            print(confussion_matrix)
-
             # Append the original model to the models list
             models['Original'] = model_results
 
+            # Get the accuracy of the Trained model
+            predicted = np.rint(model_results.predict()).astype(int)
+            actual = np.array(dataset_train[y_column])
+            
+            accuracy_trained, confussion_matrix = self.__get_accuracy_model(actual, predicted, plot=False)
+            
+            print('\nAccuracy Trained Model):', accuracy_trained)
+            print(confussion_matrix)
+
+            # Get the accuracy of the Test model
+            predicted = np.rint(model_results.predict(dataset_test)).astype(int)
+            actual = np.array(dataset_test[y_column])
+            
+            accuracy_trained, confussion_matrix = self.__get_accuracy_model(actual, predicted, plot=False)
+            
+            print('\nAccuracy - Test dataset:', accuracy_trained)
+            print(confussion_matrix)
+        
         return models
 
 

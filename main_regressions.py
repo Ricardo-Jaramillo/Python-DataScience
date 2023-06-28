@@ -84,4 +84,4 @@ reg = Regressions()
 
 # Logistic Regression
 # reg.regression_model(type='logistic', dataset=data_reg_4, y_column='Admitted', x_columns=['SAT'], plot=False)
-reg.regression_model(type='logistic', dataset=data_reg_5, y_column='Admitted', x_columns=['SAT', 'Gender'], plot=False)
+# reg.regression_model(type='logistic', dataset=data_reg_5, y_column='Admitted', x_columns=['SAT', 'Gender'], plot=False)
