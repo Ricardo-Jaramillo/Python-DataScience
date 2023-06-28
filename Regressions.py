@@ -255,7 +255,16 @@ class Regressions():
             
             print('\n% Increase over the Odds of a variable according to an increase over the value of the variable')
             print(df_odds)
+
+            # Get the accuracy of the model
+            confussion_matrix = pd.DataFrame(model_results.pred_table(), columns=['Predicted 0','Predicted 1'], index = ['Actual 0', 'Actual 1'])
+            cm = np.array(confussion_matrix)
+            accuracy_train = round((cm[0,0] + cm[1,1]) / cm.sum() * 100, 2)
             
+            print('\nAccuracy of the model:', accuracy_train)
+            print(confussion_matrix)
+
+            # Append the original model to the models list
             models['Original'] = model_results
 
         return models
