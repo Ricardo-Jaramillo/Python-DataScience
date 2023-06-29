@@ -47,8 +47,12 @@ data_1 = pd.read_csv('3.01. Country clusters.csv')
 cluster = Cluster()
 
 # Cluster data
-clustered_data = cluster.kmeans(dataset=data_1, x_column='Longitude', y_column='Latitude', clusters=3, cluster_column=None, plot=True)
-print(clustered_data)
-# Cluster data with a categorical column
-clustered_data = cluster.kmeans(dataset=data_1, x_column='Longitude', y_column='Latitude', clusters=3, cluster_column='Language', plot=True)
-print(clustered_data)
+# clustered_data = cluster.kmeans(dataset=data_1, x_column='Longitude', y_column='Latitude', clusters=3, cluster_column=None, plot=False)
+# print(clustered_data)
+
+# Cluster data with categorical column
+# clustered_data = cluster.kmeans(dataset=data_1, x_column='Longitude', y_column='Latitude', clusters=3, cluster_column='Language', plot=False)
+# print(clustered_data)
+
+# Plot Elbow Chart to find the optimum number of clusters
+cluster.plot_elbow_chart(dataset=data_1, x_column='Longitude', y_column='Latitude', cluster_column=None)
