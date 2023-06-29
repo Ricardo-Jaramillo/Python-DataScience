@@ -17,19 +17,31 @@ class Cluster:
         pass
 
 
-    def kmeans(self, dataset, x_column, y_column, clusters):
-        # Set x, y for the Scatter Plot and the data to be Clustered
-        x = dataset[x_column]
-        y = dataset[y_column]
-        data = dataset[[x_column, y_column]]
+    def kmeans(self, dataset: pd.DataFrame, x_column: str, y_column: str, clusters: int, cluster_column=None, plot: bool=False):
+        dataset_copy = dataset.copy()
+        
+        # Set x, y for the Scatter Plot
+        x = dataset_copy[x_column]
+        y = dataset_copy[y_column]
+
+        #  Set the data to be Clustered from
+        if cluster_column:
+            data = pd.DataFrame(dataset_copy[cluster_column].astype('category').cat.codes)
+            cluster_column = f'cluster_{cluster_column}'
+        else:
+            cluster_column = 'cluster'
+            data = dataset_copy[[x_column, y_column]]
 
         # Identify clusters
         kmeans = KMeans(clusters).fit(data)
         identified_clusters = kmeans.fit_predict(data)
+        dataset_copy[cluster_column] = identified_clusters
 
         # Plot Clustered data
-        plt.scatter(x, y, c=identified_clusters, cmap='rainbow')
-        
-        plt.xlim(-180,180)
-        plt.ylim(-90,90)
-        plt.show()
+        if plot:
+            plt.scatter(x, y, c=identified_clusters, cmap='rainbow')
+            # plt.xlim(-180,180)
+            # plt.ylim(-90,90)
+            plt.show()
+
+        return dataset_copy
