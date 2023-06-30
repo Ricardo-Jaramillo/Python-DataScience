@@ -43,22 +43,29 @@ case = Therabody.select(query)
 data_1 = pd.read_csv('3.01. Country clusters.csv')
 data_2 = pd.read_csv ('3.12. Example.csv')
 data_2_scaled = pd.DataFrame(preprocessing.scale(data_2), columns=[data_2.columns.to_list()])
-# Set DataFrames
+data_3 = pd.read_csv('Country clusters standardized.csv', index_col='Country')
 
+# Set DataFrames
+data_3 = data_3.drop(['Language'],axis=1)
 # Init Regressions class
 cluster = Cluster()
 
+# Plot Elbow Chart to find the optimum number of clusters
+# cluster.elbow_chart(dataset=data_1, x_column='Longitude', y_column='Latitude', cluster_column=None)
+# cluster.elbow_chart(dataset=data_1, x_column='Longitude', y_column='Latitude', cluster_column='Language')
+
+# Create a dendrogram to find the optimum number of clusters
+# cluster.dendrogram(dataset=data_3, x_column='Longitude', y_column='Latitude', plot=True, n_clusters=0)
+# data_3 = cluster.dendrogram(dataset=data_3, x_column='Longitude', y_column='Latitude', plot=False, n_clusters=3)
+# print(data_3)
+
+# Cluster data with standarized transformation
+# clustered_data = cluster.kmeans(dataset=data_2, x_column='Satisfaction', y_column='Loyalty', n_clusters=3, cluster_column=None, plot=True, standarize_columns=['Satisfaction'])
+
 # Cluster data
-# clustered_data = cluster.kmeans(dataset=data_1, x_column='Longitude', y_column='Latitude', clusters=3, cluster_column=None, plot=False)
+# clustered_data = cluster.kmeans(dataset=data_1, x_column='Longitude', y_column='Latitude', n_clusters=3, cluster_column=None, plot=False)
 # print(clustered_data)
 
 # Cluster data with categorical column
-# clustered_data = cluster.kmeans(dataset=data_1, x_column='Longitude', y_column='Latitude', clusters=3, cluster_column='Language', plot=False)
+# clustered_data = cluster.kmeans(dataset=data_1, x_column='Longitude', y_column='Latitude', n_clusters=3, cluster_column='Language', plot=False)
 # print(clustered_data)
-
-# Plot Elbow Chart to find the optimum number of clusters
-# cluster.plot_elbow_chart(dataset=data_1, x_column='Longitude', y_column='Latitude', cluster_column=None)
-# cluster.plot_elbow_chart(dataset=data_1, x_column='Longitude', y_column='Latitude', cluster_column='Language')
-
-# Cluster data with standarized transformation
-# clustered_data = cluster.kmeans(dataset=data_2, x_column='Satisfaction', y_column='Loyalty', clusters=3, cluster_column=None, plot=True, standarize_columns=['Satisfaction'])

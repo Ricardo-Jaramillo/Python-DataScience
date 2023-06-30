@@ -1,12 +1,9 @@
-from statsmodels.sandbox.regression.predstd import wls_prediction_std
-from sklearn.cluster import KMeans
-from Statistics import Stats
+from sklearn.cluster import AgglomerativeClustering
+import scipy.cluster.hierarchy as sch
 from numpy.random import default_rng
+from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
-import statsmodels.formula.api as smf
-import statsmodels.api as sm
-from matplotlib import style
-from scipy import stats
+from Statistics import Stats
 import seaborn as sns
 import pandas as pd
 import numpy as np
@@ -18,7 +15,21 @@ class Cluster:
         pass
 
 
-    def plot_elbow_chart(self, dataset: pd.DataFrame, x_column: str, y_column: str, cluster_column: str=None):
+    def elbow_chart(self, dataset: pd.DataFrame, x_column: str, y_column: str, cluster_column: str=None):
+        '''
+        Plot the Elbow method chart to analyze the behavior of number of closters and the wcss parameter
+        to look for the best/optimum number of clusters to be used in a KMeans clustering data.
+
+        dataset:
+            DataFrame containing the data to be plot
+        x_column:
+            Column name of the independent variabe
+        y_column:
+            Column name of the dependent variable
+        cluster_columns:
+            Column name of a categorical column to use for clustering the data
+        '''
+
         dataset_copy = dataset.copy()
 
         #  Set the data to be Clustered from
@@ -53,7 +64,45 @@ class Cluster:
         plt.show()
 
 
-    def kmeans(self, dataset: pd.DataFrame, x_column: str, y_column: str, clusters: int, cluster_column=None, plot: bool=False, standarize_columns: list=[]):
+    def dendrogram(self, dataset: pd.DataFrame, x_column: str, y_column: str, plot: bool=False, n_clusters: int=0):
+        '''
+        Plot a dendrogram to look for an optimum number of clusters
+
+        dataset:
+            DataFrame containing the data to be clustered
+        x_column:
+            Column name of the independent variabe
+        y_column:
+            Column name of the dependent variable
+        plot:
+            Boolean that indicates plotting the results
+        n_clusters:
+            Number of desired clusters after checking the dendrogram plot
+        '''
+        
+        # Set data to use for dendrogram
+        data = dataset[[x_column, y_column]]
+        
+        # Plot if specified
+        if plot:
+            # Create dendrogram
+            dendrogram = sch.dendrogram(sch.linkage(data, method = 'ward'))
+
+            # Plot
+            plt.title('Dendrogram')
+            plt.xlabel(x_column)
+            plt.ylabel('Euclidean distances')
+            plt.show()
+        
+        # Get cluster array
+        if n_clusters:
+            hc = AgglomerativeClustering(n_clusters=n_clusters, affinity='euclidean', linkage='ward')
+            data['Cluster'] = hc.fit_predict(data)
+        
+        return data
+        
+
+    def kmeans(self, dataset: pd.DataFrame, x_column: str, y_column: str, n_clusters: int, cluster_column=None, plot: bool=False, standarize_columns: list=[]):
         '''
         Clustering data with the KMeans method
 
@@ -103,15 +152,16 @@ class Cluster:
                 data[column] = stats.standarize_distribution(data[column])
 
         # Identify clusters
-        kmeans = KMeans(clusters).fit(data)
+        kmeans = KMeans(n_clusters).fit(data)
         identified_clusters = kmeans.fit_predict(data)
         dataset_copy[cluster_column] = identified_clusters
 
         # Plot Clustered data
         if plot:
             plt.scatter(x, y, c=identified_clusters, cmap='rainbow')
-            # plt.xlim(-180, 180)
-            # plt.ylim(-5, 5)
+            plt.xlabel(x_column)
+            plt.ylabel(y_column)
+            plt.title(f'{identified_clusters.max() + 1} Clusters')
             plt.show()
 
         return dataset_copy
