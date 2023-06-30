@@ -88,11 +88,15 @@ class Cluster:
             # Create dendrogram
             dendrogram = sch.dendrogram(sch.linkage(data, method = 'ward'))
 
-            # Plot
+            # Plot Scipy Dendrogram
             plt.title('Dendrogram')
             plt.xlabel(x_column)
             plt.ylabel('Euclidean distances')
             plt.show()
+
+            # Plot seaborn heatmap
+            # sns.clustermap(data, cmap='mako')
+            # plt.show()
         
         # Get cluster array
         if n_clusters:
