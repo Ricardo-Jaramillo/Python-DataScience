@@ -1,6 +1,8 @@
-from Statistics import Stats
+from sklearn import preprocessing
 from SQLServer import SQLServer
+from Statistics import Stats
 import pandas as pd
+
 
 # Init SQLServer connection and get data
 Therabody = SQLServer('DbTherabody')
@@ -73,11 +75,16 @@ stats = Stats()
 # stats.cov_corr(case_metrics)
 
 # Plot Confussion matrix
-stats.confussion_matrix(data_confussion_matrix['y_actual'], data_confussion_matrix['y_predicted'], plot=True)
+# stats.confussion_matrix(data_confussion_matrix['y_actual'], data_confussion_matrix['y_predicted'], plot=True)
 
 # Standarize distribution
 # a = stats.standarize_distribution(case_HandleTimeHours)
+# print(case_HandleTimeHours)
 # print(a)
+
+# x_scaled = preprocessing.scale(case_HandleTimeHours)
+# print(case_HandleTimeHours)
+# print(x_scaled)
 
 # Apply Central Limit Theorem
 # a = stats.central_limit(case_HandleTimeHours, n_samples=1000, frac=0.6)

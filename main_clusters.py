@@ -1,3 +1,4 @@
+from sklearn import preprocessing
 from SQLServer import SQLServer
 from Clusters import Cluster
 import pandas as pd
@@ -40,7 +41,8 @@ case = Therabody.select(query)
 # case = pd.read_csv('case.csv')
 
 data_1 = pd.read_csv('3.01. Country clusters.csv')
-
+data_2 = pd.read_csv ('3.12. Example.csv')
+data_2_scaled = pd.DataFrame(preprocessing.scale(data_2), columns=[data_2.columns.to_list()])
 # Set DataFrames
 
 # Init Regressions class
@@ -55,4 +57,8 @@ cluster = Cluster()
 # print(clustered_data)
 
 # Plot Elbow Chart to find the optimum number of clusters
-cluster.plot_elbow_chart(dataset=data_1, x_column='Longitude', y_column='Latitude', cluster_column=None)
+# cluster.plot_elbow_chart(dataset=data_1, x_column='Longitude', y_column='Latitude', cluster_column=None)
+# cluster.plot_elbow_chart(dataset=data_1, x_column='Longitude', y_column='Latitude', cluster_column='Language')
+
+# Cluster data with standarized transformation
+# clustered_data = cluster.kmeans(dataset=data_2, x_column='Satisfaction', y_column='Loyalty', clusters=3, cluster_column=None, plot=True, standarize_columns=['Satisfaction'])
