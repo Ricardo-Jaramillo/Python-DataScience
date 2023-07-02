@@ -42,11 +42,12 @@ case = Therabody.select(query)
 
 data_1 = pd.read_csv('3.01. Country clusters.csv')
 data_2 = pd.read_csv ('3.12. Example.csv')
-data_2_scaled = pd.DataFrame(preprocessing.scale(data_2), columns=[data_2.columns.to_list()])
 data_3 = pd.read_csv('Country clusters standardized.csv', index_col='Country')
 
 # Set DataFrames
 data_3 = data_3.drop(['Language'],axis=1)
+data_2_scaled = pd.DataFrame(preprocessing.scale(data_2), columns=[data_2.columns.to_list()])
+
 # Init Regressions class
 cluster = Cluster()
 
