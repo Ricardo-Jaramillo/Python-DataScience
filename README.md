@@ -7,6 +7,8 @@
 - seaborn
 - pandas
 - numpy
+- scikit-learn
+- tensorflow
 - pyodc (if you need to connect to a database)
 
 ### Dataset
@@ -38,8 +40,20 @@ For this project I used a connection to a SQL Database, so the pyodbc library is
 ## Regressions Class
 1. Simple linear Regression (OLS)
 2. Multiple linear Regression (OLS)
-3. Dummy variables
-4. Logistic Regression
+    1. Dummy variables
+3. Logistic Regression
+    1. Binary predictors
+
+## Deep Learning Class
+1. Supervised Models
+    1. Regressions
+    2. Classification
+2. Non-supervised Models (PENDING)
+3. Objective Function
+    1. Loss Norma-L2 (Regressions)
+    2. Cross Entropy (Classification)
+4. Optimization Algorithm
+    1. Gradient descent
 
 ## Pending
 1. Probability distributions

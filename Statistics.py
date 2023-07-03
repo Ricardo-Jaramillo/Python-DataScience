@@ -103,19 +103,17 @@ class Stats():
     
 
     # n x 2 dataset. y_actual, y_predicted order
-    def confussion_matrix(self, data, plot=True):
+    def confussion_matrix(self, y_actual, y_predicted, plot=True):
         '''
             Working with non numeric data
             df['y_actual'] = df['y_actual'].map({'Yes': 1, 'No': 0})
             df['y_predicted'] = df['y_predicted'].map({'Yes': 1, 'No': 0})
         '''
-        confusion_matrix = pd.crosstab(data[data.columns[0]], data[data.columns[1]], rownames=['Actual'], colnames=['Predicted'], margins=True)
+        confusion_matrix = np.array(pd.crosstab(y_actual, y_predicted, margins=False))
         
         if plot:
             sns.heatmap(confusion_matrix, annot=True)
             plt.show()
-
-        print(confusion_matrix)
 
         return confusion_matrix
     
