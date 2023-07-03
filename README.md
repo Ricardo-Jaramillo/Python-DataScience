@@ -40,6 +40,18 @@ For this project I used a connection to a SQL Database, so the pyodbc library is
 2. Multiple linear Regression (OLS)
     1. Dummy variables
 3. Logistic Regression
+    1. Binary predictors
+
+## Deep Learning Class
+1. Supervised Models
+    1. Regressions
+    2. Classification
+2. Non-supervised Models (PENDING)
+3. Objective Function
+    1. Loss Norma-L2 (Regressions)
+    2. Cross Entropy (Classification)
+4. Optimization Algorithm
+    1. Gradient descent
 
 ## Pending
 1. Probability distributions
@@ -49,9 +61,3 @@ For this project I used a connection to a SQL Database, so the pyodbc library is
     2. Log transformation variables as elasticity (economics)
     3. Durbin-Watson to detect no autocorrelation
     4. Other regression models to time-series or when the error terms (No Autocorrelation) are correlated
-4. Logistic Regression
-    1. Code
-    2. Params significance on a difference of possibilities. How odds increment
-    3. Binary predictors (similar to dummy variables)
-    4. Caluclate the accuracy of the model
-    5. Test the model accuracy. Separate Trainning and Test Samples
