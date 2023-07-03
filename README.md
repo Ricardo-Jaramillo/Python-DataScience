@@ -7,6 +7,8 @@
 - seaborn
 - pandas
 - numpy
+- scikit-learn
+- tensorflow
 - pyodc (if you need to connect to a database)
 
 ### Dataset
