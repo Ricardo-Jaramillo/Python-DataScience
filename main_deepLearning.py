@@ -1,5 +1,6 @@
-from SQLServer import SQLServer
 from DeepLearning import DeepLearning
+import matplotlib.pyplot as plt
+from SQLServer import SQLServer
 import pandas as pd
 import numpy as np
 
@@ -52,5 +53,24 @@ training_data = np.load('TF_intro.npz')
 # generated_targets = 2*xs - 3*zs + 5 + noise
 # np.savez('TF_intro', inputs=generated_inputs, targets=generated_targets)
 
-# Init Regressions class
+# Init DeepLearning class
 deep_learning = DeepLearning()
+
+# Create a model
+model = deep_learning.model(training_data=training_data, learning_rate=0.01, epochs=100, verbose=0)
+
+# Get weights
+# input_weights = model.layers[0].get_weights()[0]
+# bias_weights = model.layers[0].get_weights()[1]
+# print(input_weights)
+# print(bias_weights)
+
+# Make predictions
+predictions = model.predict_on_batch(training_data['inputs']).round(1)
+# print(predictions)
+
+# plot predictions vs targets
+plt.plot(np.squeeze(predictions), np.squeeze(training_data['targets']))
+plt.xlabel('outputs')
+plt.ylabel('targets')
+plt.show()
