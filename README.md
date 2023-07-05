@@ -63,3 +63,30 @@ For this project I used a connection to a SQL Database, so the pyodbc library is
     2. Log transformation variables as elasticity (economics)
     3. Durbin-Watson to detect no autocorrelation
     4. Other regression models to time-series or when the error terms (No Autocorrelation) are correlated
+4. Hiperparameters vs Parameters
+    1. Amplitud
+    2. Deep
+    3. Learning rate (eta)
+    4. Lot size
+    5. Momentum coefficient (alpha)
+    6. Decay coefficient (c)
+5. DeepLearning Activation functions
+    1. sigmoide (0, 1)
+    2. tanh (-1, 1)
+    3. ReLu (0, inf)
+    4. softmax (0, 1)
+6. Preventing overfitting. Early stop
+    1. Set number of epochs
+    2. Stop when delta <= 0.001
+    3. Validation / Cross-validation
+7. Initialization
+8. Find the Global minimum (not local)
+9. Programming the Learning rate
+10. Preprocessing
+    1. Standarization
+    2. Normalization
+    3. PCA
+    4. Bleaching
+11. Categorical data
+    1. Binary
+    2. One-Hot
