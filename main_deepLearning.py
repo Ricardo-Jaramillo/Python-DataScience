@@ -1,8 +1,16 @@
+import tensorflow as tf
+import tensorflow_datasets as tfds
+from numpy.random import default_rng
 from DeepLearning import DeepLearning
 import matplotlib.pyplot as plt
 from SQLServer import SQLServer
 import pandas as pd
 import numpy as np
+
+
+# Setting a seed for random numbers
+# print(SeedSequence().entropy)
+# rng = default_rng(122708692400277160069775657973126599887)
 
 # Init SQLServer connection and get data
 Therabody = SQLServer('DbTherabody')
@@ -36,41 +44,51 @@ query = '''
     where Date_Created >= '2023-06-01'
 '''
 
-# Reach data
-case = Therabody.select(query)
-# case.to_csv('case.csv')
-# case = pd.read_csv('case.csv')
-training_data = np.load('TF_intro.npz')
-
-# Set DataFrames
-
-# An exercise with the form y = 2x - 3z + 5
-# observations = 1000
-# xs = np.random.uniform(low=-10, high=10, size=(observations,1))
-# zs = np.random.uniform(-10, 10, (observations,1))
-# generated_inputs = np.column_stack((xs,zs))
-# noise = np.random.uniform(-1, 1, (observations,1))
-# generated_targets = 2*xs - 3*zs + 5 + noise
+# Save DataFrames as npz file
 # np.savez('TF_intro', inputs=generated_inputs, targets=generated_targets)
+
+# Reach data
+training_data = np.load('TF_intro.npz')
+mnist_dataset, mnist_info = tfds.load(name='mnist', with_info=True, as_supervised=True)
+
+# Set Datasets
+mnist_train, mnist_test = mnist_dataset['train'], mnist_dataset['test']
+
+def scale(image, label):
+    image = tf.cast(image, tf.float32)
+    image /= 255.
+    return image, label
+
+scaled_train_and_validation_data = mnist_train.map(scale)
+test_data = mnist_test.map(scale)
 
 # Init DeepLearning class
 deep_learning = DeepLearning()
 
-# Create a model
+# Create a simple linear model
 model = deep_learning.model(training_data=training_data, learning_rate=0.01, epochs=100, verbose=0)
 
-# Get weights
-# input_weights = model.layers[0].get_weights()[0]
-# bias_weights = model.layers[0].get_weights()[1]
-# print(input_weights)
-# print(bias_weights)
-
 # Make predictions
-predictions = model.predict_on_batch(training_data['inputs']).round(1)
-# print(predictions)
+deep_learning.predict(model=model, dataset=training_data)
 
-# plot predictions vs targets
-plt.plot(np.squeeze(predictions), np.squeeze(training_data['targets']))
-plt.xlabel('outputs')
-plt.ylabel('targets')
-plt.show()
+# Create a deep Neural Network
+# Split dataset
+dict_datasets_frac = {'train': 0.9, 'val': 0.1}
+BUFFER_SIZE = 10000
+
+datasets = deep_learning.split_datasets(dataset=scaled_train_and_validation_data, split_into=dict_datasets_frac, shuffle_buffer_size=BUFFER_SIZE)
+datasets['test'] = test_data
+
+# Create the model
+BATCH_SIZE = 100
+output_size = 10
+depth = 2
+width = 50
+
+model_structure = {
+    'Input': tf.keras.layers.Flatten(input_shape=(28, 28, 1)),
+    'Hidden': [(depth, width, 'relu')],
+    'Output': (output_size, 'softmax')
+}
+
+model = deep_learning.deep_model(datasets=datasets, output_size=output_size, model_structure=model_structure, batch_size=BATCH_SIZE, optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])

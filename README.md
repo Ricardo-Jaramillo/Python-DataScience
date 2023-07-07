@@ -90,3 +90,10 @@ For this project I used a connection to a SQL Database, so the pyodbc library is
 11. Categorical data
     1. Binary
     2. One-Hot
+12. Balanced previous/data
+13. RNCs and RNRs
+14. Other Deep Learning models
+    1. Bayesian nets
+    2. Generative models
+    3. Decision Trees
+
