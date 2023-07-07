@@ -74,7 +74,7 @@ class DeepLearning:
         return dict_datasets
 
     
-    def deep_model(self, datasets, output_size, model_structure, batch_size=100, optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'], epochs=5):
+    def deep_model(self, datasets, model_structure, batch_size=100, optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'], epochs=5):
         # Prepare batches of datasets
         for key in datasets.keys():
             if key == 'train':

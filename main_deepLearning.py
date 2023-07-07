@@ -8,10 +8,6 @@ import pandas as pd
 import numpy as np
 
 
-# Setting a seed for random numbers
-# print(SeedSequence().entropy)
-# rng = default_rng(122708692400277160069775657973126599887)
-
 # Init SQLServer connection and get data
 Therabody = SQLServer('DbTherabody')
 query = '''
@@ -62,33 +58,35 @@ def scale(image, label):
 scaled_train_and_validation_data = mnist_train.map(scale)
 test_data = mnist_test.map(scale)
 
+
 # Init DeepLearning class
 deep_learning = DeepLearning()
 
 # Create a simple linear model
-model = deep_learning.model(training_data=training_data, learning_rate=0.01, epochs=100, verbose=0)
+# model = deep_learning.model(training_data=training_data, learning_rate=0.01, epochs=100, verbose=0)
 
 # Make predictions
-deep_learning.predict(model=model, dataset=training_data)
+# deep_learning.predict(model=model, dataset=training_data)
 
 # Create a deep Neural Network
 # Split dataset
-dict_datasets_frac = {'train': 0.9, 'val': 0.1}
-BUFFER_SIZE = 10000
+# dict_datasets_frac = {'train': 0.9, 'val': 0.1}
+# BUFFER_SIZE = 10000
 
-datasets = deep_learning.split_datasets(dataset=scaled_train_and_validation_data, split_into=dict_datasets_frac, shuffle_buffer_size=BUFFER_SIZE)
-datasets['test'] = test_data
+# datasets = deep_learning.split_datasets(dataset=scaled_train_and_validation_data, split_into=dict_datasets_frac, shuffle_buffer_size=BUFFER_SIZE)
+# datasets['test'] = test_data
 
-# Create the model
-BATCH_SIZE = 100
-output_size = 10
-depth = 2
-width = 50
+# # Create the model
+# BATCH_SIZE = 100
+# output_size = 10
+# depth = 2
+# width = 50
+# epochs = 1
 
-model_structure = {
-    'Input': tf.keras.layers.Flatten(input_shape=(28, 28, 1)),
-    'Hidden': [(depth, width, 'relu')],
-    'Output': (output_size, 'softmax')
-}
+# model_structure = {
+#     'Input': tf.keras.layers.Flatten(input_shape=(28, 28, 1)),
+#     'Hidden': [(depth, width, 'relu')],
+#     'Output': (output_size, 'softmax')
+# }
 
-model = deep_learning.deep_model(datasets=datasets, output_size=output_size, model_structure=model_structure, batch_size=BATCH_SIZE, optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+# model = deep_learning.deep_model(datasets=datasets, model_structure=model_structure, batch_size=BATCH_SIZE, optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'], epochs=epochs)
