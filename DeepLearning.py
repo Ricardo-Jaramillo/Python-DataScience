@@ -15,6 +15,29 @@ class DeepLearning:
         pass
 
 
+    def split_datasets(self, dataset, split_into={'train': 0.8, 'val': 0.1, 'test': 0.1}, shuffle_buffer_size=0):
+        # Make sure the sum fractions gives 100%
+        assert sum(split_into.values()) == 1
+
+        dict_datasets = {}
+        
+        # Shuffle dataset
+        if shuffle_buffer_size:
+            # Specify seed to always have the same split distribution between runs
+            dataset = dataset.shuffle(shuffle_buffer_size, seed=12)
+        
+        # Split each dataset in a dict
+        dataset_size = dataset.cardinality().numpy()
+
+        for type, frac in split_into.items():
+            if frac:
+                size = int(frac * dataset_size)
+                dict_datasets[type] = dataset.take(size)
+                dataset = dataset.skip(size)
+        
+        return dict_datasets
+    
+
     def model(self, training_data: pd.DataFrame, learning_rate: int=0, epochs: int=100, verbose: int=2):
         '''
         Simple model to solve Linear Regression with Gradient Descent optimizer
@@ -49,29 +72,6 @@ class DeepLearning:
         model.fit(training_data['inputs'], training_data['targets'], epochs=epochs, verbose=verbose)
         
         return model
-    
-
-    def split_datasets(self, dataset, split_into={'train': 0.8, 'val': 0.1, 'test': 0.1}, shuffle_buffer_size=0):
-        # Make sure the sum fractions gives 100%
-        assert sum(split_into.values()) == 1
-
-        dict_datasets = {}
-        
-        # Shuffle dataset
-        if shuffle_buffer_size:
-            # Specify seed to always have the same split distribution between runs
-            dataset = dataset.shuffle(shuffle_buffer_size, seed=12)
-        
-        # Split each dataset in a dict
-        dataset_size = dataset.cardinality().numpy()
-
-        for type, frac in split_into.items():
-            if frac:
-                size = int(frac * dataset_size)
-                dict_datasets[type] = dataset.take(size)
-                dataset = dataset.skip(size)
-        
-        return dict_datasets
 
     
     def deep_model(self, datasets, model_structure, batch_size=100, optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'], epochs=5):
