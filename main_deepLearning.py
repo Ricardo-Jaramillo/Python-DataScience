@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from SQLServer import SQLServer
 import pandas as pd
 import numpy as np
+import os
 
 
 # Init SQLServer connection and get data
@@ -42,9 +43,10 @@ query = '''
 
 # Save DataFrames as npz file
 # np.savez('TF_intro', inputs=generated_inputs, targets=generated_targets)
+path = os.path.join(os.path.abspath(os.getcwd()), 'datasets')
 
 # Reach data
-training_data = np.load('TF_intro.npz')
+training_data = np.load(f'{path}/TF_intro.npz')
 mnist_dataset, mnist_info = tfds.load(name='mnist', with_info=True, as_supervised=True)
 
 # Set Datasets
@@ -81,7 +83,7 @@ deep_learning = DeepLearning()
 # output_size = 10
 # depth = 2
 # width = 50
-# epochs = 1
+# epochs = 5
 
 # model_structure = {
 #     'Input': tf.keras.layers.Flatten(input_shape=(28, 28, 1)),

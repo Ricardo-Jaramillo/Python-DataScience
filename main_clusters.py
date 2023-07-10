@@ -2,6 +2,7 @@ from sklearn import preprocessing
 from SQLServer import SQLServer
 from Clusters import Cluster
 import pandas as pd
+import os
 
 # Init SQLServer connection and get data
 Therabody = SQLServer('DbTherabody')
@@ -39,10 +40,11 @@ query = '''
 case = Therabody.select(query)
 # case.to_csv('case.csv')
 # case = pd.read_csv('case.csv')
+path = os.path.join(os.path.abspath(os.getcwd()), 'datasets')
 
-data_1 = pd.read_csv('3.01. Country clusters.csv')
-data_2 = pd.read_csv ('3.12. Example.csv')
-data_3 = pd.read_csv('Country clusters standardized.csv', index_col='Country')
+data_1 = pd.read_csv(f'{path}/3.01. Country clusters.csv')
+data_2 = pd.read_csv (f'{path}/3.12. Example.csv')
+data_3 = pd.read_csv(f'{path}/Country clusters standardized.csv', index_col='Country')
 
 # Set DataFrames
 data_3 = data_3.drop(['Language'],axis=1)

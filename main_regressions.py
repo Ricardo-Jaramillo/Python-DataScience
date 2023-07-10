@@ -1,6 +1,7 @@
 from Regressions import Regressions
 from SQLServer import SQLServer
 import pandas as pd
+import os
 
 # Init SQLServer connection and get data
 Therabody = SQLServer('DbTherabody')
@@ -38,12 +39,13 @@ query = '''
 case = Therabody.select(query)
 # case.to_csv('case.csv')
 # case = pd.read_csv('case.csv')
+path = os.path.join(os.path.abspath(os.getcwd()), 'datasets')
 
-data_reg_1 = pd.read_csv('1.01. Simple linear regression.csv')
-data_reg_2 = pd.read_csv('1.02. Multiple linear regression.csv')
-data_reg_3 = pd.read_csv('1.03. Dummies.csv')
-data_reg_4 = pd.read_csv('2.01. Admittance.csv')
-data_reg_5 = pd.read_csv('2.02. Binary predictors.csv')
+data_reg_1 = pd.read_csv(f'{path}/1.01. Simple linear regression.csv')
+data_reg_2 = pd.read_csv(f'{path}/1.02. Multiple linear regression.csv')
+data_reg_3 = pd.read_csv(f'{path}/1.03. Dummies.csv')
+data_reg_4 = pd.read_csv(f'{path}/2.01. Admittance.csv')
+data_reg_5 = pd.read_csv(f'{path}/2.02. Binary predictors.csv')
 
 # Set DataFrames
 data_reg_3['Attendance'] = data_reg_3['Attendance'].map({'Yes': 1, 'No': 0})

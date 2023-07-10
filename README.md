@@ -13,7 +13,7 @@
 
 ### Dataset
 For this project I used a connection to a SQL Database, so the pyodbc library is installed. But you could either import a csv file or make a connection to where your dataset is located.
-
+The 'database' folder contains some csv files used to explain some classes like Regressions and Clusters
 
 ## Statistics Class
 ### Plots

@@ -113,7 +113,8 @@ class DeepLearning:
         model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
 
         # Fit the model
-        model.fit(datasets['train'], epochs=epochs, validation_data=(next(iter(datasets['val']))), verbose=2)
+        early_stopping = tf.keras.callbacks.EarlyStopping(patience=10)
+        model.fit(datasets['train'], batch_size=batch_size, epochs=epochs, callbacks=[early_stopping], validation_data=(next(iter(datasets['val']))), verbose=2)
 
         # Evaluate the model accuracy
         test_loss, test_accuracy = model.evaluate(datasets['test'])
